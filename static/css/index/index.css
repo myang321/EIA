@@ -1,0 +1,24 @@
+#window_signup {
+    width: 500px;
+    background: #e8e8e8;
+    border: 1px solid #dadada;
+    font-family: sans-serif;
+    padding: 5px 10px 20px 20px;
+}
+
+#window_login {
+    width: 500px;
+    background: #e8e8e8;
+    border: 1px solid #dadada;
+    font-family: sans-serif;
+    padding: 5px 10px 20px 20px;
+}
+
+/*.billboard.light {*/
+/*background: url('/static/img/index/billboard.jpg') no-repeat;*/
+
+/*background-size: cover;*/
+/*-webkit-background-size: cover;*/
+/*-moz-background-size: cover;*/
+/*-o-background-size: cover;*/
+/*}*/

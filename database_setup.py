@@ -121,6 +121,15 @@ def get_category_function_id(con, title):
     sql = "select cid from {0} where title='{1}'".format(CATEGORY_FUNCTION, title)
     cursor.execute(sql)
     result = cursor.fetchone()
+    print "in get_category_function_id ", title
+    return result[0]
+
+
+def get_category_function_title(con, id):
+    cursor = con.cursor()
+    sql = "select title from {0} where cid={1}".format(CATEGORY_FUNCTION, id)
+    cursor.execute(sql)
+    result = cursor.fetchone()
     return result[0]
 
 
@@ -132,14 +141,33 @@ def get_category_ui_style_id(con, title):
     return result[0]
 
 
+def get_category_ui_style_title(con, id):
+    cursor = con.cursor()
+    sql = "select title from {0} where cid={1}".format(CATEGORY_UI_STYLE, id)
+    cursor.execute(sql)
+    result = cursor.fetchone()
+    return result[0]
+
+
 def search_by_category(con, c_func, c_ui):
     cursor = con.cursor()
-    sql = "select * from {0} where c_function={1} and c_ui_style={2}".format(PRODUCTS_TABLE,
-                                                                             get_category_function_id(con, c_func),
-                                                                             get_category_ui_style_id(con, c_ui))
+    if c_func == 'all' and c_ui == 'all':
+        sql = "select * from {0}".format(PRODUCTS_TABLE)
+    elif c_func != 'all':
+        sql = "select * from {0} where c_function={1}".format(PRODUCTS_TABLE, get_category_function_id(con, c_func))
+    elif c_ui != 'all':
+        sql = "select * from {0} where c_ui_style={1}".format(PRODUCTS_TABLE, get_category_ui_style_title(con, c_ui))
+    else:
+        sql = "select * from {0} where c_function={1} and c_ui_style={2}".format(PRODUCTS_TABLE,
+                                                                                 get_category_function_id(con, c_func),
+                                                                                 get_category_ui_style_id(con, c_ui))
     cursor.execute(sql)
     result = cursor.fetchall()
-    return result
+    lists = [list(row) for row in result]
+    for row in lists:
+        row.append(get_category_function_title(con, row[5]))
+        row.append(get_category_ui_style_title(con, row[6]))
+    return lists
 
 
 def get_category_function_list(con):
@@ -147,7 +175,9 @@ def get_category_function_list(con):
     sql = "SELECT title from {0}".format(CATEGORY_FUNCTION)
     cursor.execute(sql)
     result = cursor.fetchall()
-    return result
+    # convert to list
+    list1 = [row[0] for row in result]
+    return list1
 
 
 def get_category_ui_style_list(con):
@@ -155,7 +185,9 @@ def get_category_ui_style_list(con):
     sql = "SELECT title from {0}".format(CATEGORY_UI_STYLE)
     cursor.execute(sql)
     result = cursor.fetchall()
-    return result
+    # convert to list
+    list1 = [row[0] for row in result]
+    return list1
 
 
 if __name__ == "__main__":
@@ -168,7 +200,8 @@ if __name__ == "__main__":
     # r=get_category_function_id(con,"travel")
     # r = get_category_ui_style_id(con, "plain")
     # r = search_by_category(con, "travel", "plain")
-    # r=get_category_function_list(con)
-    r = get_category_ui_style_list(con)
+    # r = get_category_function_list(con)
+    # r = get_category_ui_style_list(con)
+    r = get_category_ui_style_title(con, 2)
     print r
     # u = Developer("ha", "123", "sadsaa@dasda.com")

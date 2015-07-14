@@ -20,15 +20,17 @@ def teardown_request(exception):
 # status=0 normal
 # status=1 signup open
 # status=2 login open
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index(status=0, msg=None):
     if request.method == 'POST':
         pass
     else:
-        return render_template('index.html', status=status, msg=msg)
+        c_func = db.get_category_function_list(g.db)
+        c_ui = db.get_category_ui_style_list(g.db)
+        return render_template('index.html', status=status, msg=msg, c_func=c_func, c_ui=c_ui)
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
@@ -48,7 +50,7 @@ def login():
         return redirect(url_for('index', status=0))
 
 
-@app.route('/signup')
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
         username = request.form['username']
@@ -69,14 +71,16 @@ def signup():
         return redirect(url_for('index', status=0))
 
 
-@app.route('/search')
+@app.route('/search', methods=['GET', 'POST'])
 def search():
     if request.method == 'POST':
         c_func = request.form['c_func']
         c_ui = request.form['c_ui']
-
+        list1 = db.search_by_category(g.db, c_func, c_ui)
+        return render_template('search.html', list1=list1)
     else:
-        return render_template('search.html')
+        list1 = db.search_by_category(g.db, 'all', 'all')
+        return render_template('search.html', list1=list1)
 
 
 if __name__ == '__main__':

@@ -1,1 +1,17 @@
 {% extends "base2.html" %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+    {% for i in list1 %}
+        <div>{{ i[1] }}</div>
+        <div>{{ i[2] }}</div>
+        <div>{{ i[3] }}</div>
+        <div>{{ i[7] }}</div>
+        <div>{{ i[8] }}</div>
+    {% endfor %}
+{% endblock %}
+
+{% block script %}
+{% endblock %}

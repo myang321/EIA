@@ -1,9 +1,21 @@
 {% extends "base2.html" %}
 
 {% block head %}
+    <link rel="stylesheet" type="text/css" href="/static/css/index/index.css">
 {% endblock %}
 
 {% block body %}
+    <dialog id="window_signup">
+        <h3>Sign Up</h3>
+
+        <button id="exit_signup">Close Dialog</button>
+    </dialog>
+
+    <dialog id="window_login">
+        <h3>Login</h3>
+
+        <button id="exit_login">Close Dialog</button>
+    </dialog>
 
 
     <div class="caption light animated wow fadeInDown clearfix">
@@ -13,24 +25,25 @@
         <hr>
     </div>
     <div class="caption1">
-        <select>
-            <option value="">Select your funtion</option>
-            <option value="a">a</option>
-            <option value="b">b</option>
-            <option value="c">c</option>
-            <option value="d">d</option>
-        </select>
-        <select>
-            <option value="">Select your UI style</option>
-            <option value="a">a</option>
-            <option value="b">b</option>
-            <option value="c">c</option>
-            <option value="d">d</option>
-        </select>
-        <input id="searchButton" type="submit" value="Go!"/>
+        <form class="form" method="post" action={{ url_for("search") }}>
+            <select name="c_func">
+                <option value="all">Select your funtion</option>
+                {% for i in c_func %}
+                    <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+            </select>
+            <select name="c_ui">
+                <option value="all">Select your UI style</option>
+                {% for i in c_ui %}
+                    <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+            </select>
+            <input id="searchButton" type="submit" value="Go!"/>
+        </form>
     </div>
 
 {% endblock %}
 
 {% block script %}
+    <script type="text/javascript" src="/static/js/index/index.js"></script>
 {% endblock %}
