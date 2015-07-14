@@ -10,6 +10,9 @@
         <div>{{ i[3] }}</div>
         <div>{{ i[7] }}</div>
         <div>{{ i[8] }}</div>
+        <a href={{ url_for('product_detail',title=i[1]) }}>
+            <button id="buy">Detail</button>
+        </a>
     {% endfor %}
 {% endblock %}
 

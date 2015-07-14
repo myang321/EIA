@@ -190,6 +190,54 @@ def get_category_ui_style_list(con):
     return list1
 
 
+def get_product_detail(con, title):
+    cursor = con.cursor()
+    sql = "SELECT * from {0} where title='{1}'".format(PRODUCTS_TABLE, title)
+    cursor.execute(sql)
+    result = cursor.fetchone()
+    list1 = list(result)
+    list1.append(get_category_function_title(con, result[5]))
+    list1.append(get_category_ui_style_title(con, result[6]))
+    return list1
+
+
+def get_product_id(con, title):
+    cursor = con.cursor()
+    sql = "SELECT pid from {0} where title='{1}'".format(PRODUCTS_TABLE, title)
+    cursor.execute(sql)
+    result = cursor.fetchone()
+    return result[0]
+
+
+# def get_buyer_id(con, name):
+# cursor = con.cursor()
+# sql = "SELECT pid from {0} where title='{1}'".format(PRODUCTS_TABLE, title)
+# cursor.execute(sql)
+# result = cursor.fetchone()
+# return result[0]
+
+def buy_product(con, title, buyer_id):
+    cursor = con.cursor()
+    pid = get_product_id(con, title)
+    sql = "insert into {0} (pid,buyer_id) values({1},{2})".format(ORDERS_TABLE, pid, buyer_id)
+    cursor.execute(sql)
+    con.commit()
+
+
+def has_bought(con, title, buyer_id):
+    cursor = con.cursor()
+    pid = get_product_id(con, title)
+    sql = "select * from {0} where pid={1} and buyer_id={2}".format(ORDERS_TABLE, pid, buyer_id)
+    print sql
+    cursor.execute(sql)
+    result = cursor.fetchone()
+    print result
+    if result != None:
+        return True
+    else:
+        return False
+
+
 if __name__ == "__main__":
     con = conn()
     # cursor = con.cursor()
@@ -202,6 +250,7 @@ if __name__ == "__main__":
     # r = search_by_category(con, "travel", "plain")
     # r = get_category_function_list(con)
     # r = get_category_ui_style_list(con)
-    r = get_category_ui_style_title(con, 2)
+    # r = get_category_ui_style_title(con, 2)
+    r = get_product_detail(con, 'airbnb')
     print r
     # u = Developer("ha", "123", "sadsaa@dasda.com")
