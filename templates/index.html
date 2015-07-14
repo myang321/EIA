@@ -12,17 +12,25 @@
     </dialog>
 
     <dialog id="window_login">
-        <h3>Login</h3>
-
-        <button id="exit_login">Close Dialog</button>
+        <form class="form" method="post" action={{ url_for("login") }}>
+            <h3>Login</h3>
+            <select name="type">
+                <option value="buyer">Buyer</option>
+                <option value="developer">Developer</option>
+            </select>
+            <input type="text" id="username" name="username" placeholder="username"
+                   value="{{ request.form['username'] }}">
+            <input type="text" id="password" name="password" placeholder="password">
+            <input type="submit" value="confirm">
+            <button type="button" id="exit_login">Close Dialog</button>
+        </form>
     </dialog>
 
 
     <div class="caption light animated wow fadeInDown clearfix">
-        <h1>Here You Are</h1>
+        <h1 id="welcome1">Here You Are</h1>
 
-        <p>we development, you enjoy</p>
-        <hr>
+        <p id="welcome2">we development, you enjoy</p>
     </div>
     <div class="caption1">
         <form class="form" method="post" action={{ url_for("search") }}>

@@ -1,0 +1,23 @@
+{% extends "base2.html" %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+    <div>{{ list1[1] }}</div>
+    <div>{{ list1[2] }}</div>
+    <div>{{ list1[3] }}</div>
+    <div>{{ list1[6] }}</div>
+    <div>{{ list1[7] }}</div>
+    {% if bought==False %}
+        <form class="form" method="post" action={{ url_for("buy") }}>
+            <input type="hidden" name="p_title" value="{{ list1[1] }}">
+            <input id="detail" type="submit" value="Buy"/>
+        </form>
+    {% else %}
+        <div>You have bought it</div>
+    {% endif %}
+{% endblock %}
+
+{% block script %}
+{% endblock %}

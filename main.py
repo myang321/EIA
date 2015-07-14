@@ -36,13 +36,14 @@ def login():
         username = request.form['username']
         password = request.form['password']
         type = request.form['type']
-        if type == 'dev':
+        if type == 'developer':
             result = db.developers_authentication(g.db, username, password)
         elif type == 'buyer':
             result = db.buyers_authentication(g.db, username, password)
         if result != None:
             session['username'] = username
             session['type'] = type
+            session['uid'] = result[0]
             return redirect(url_for('index', status=0))
         else:
             return redirect(url_for('index', status=2))
@@ -81,6 +82,36 @@ def search():
     else:
         list1 = db.search_by_category(g.db, 'all', 'all')
         return render_template('search.html', list1=list1)
+
+
+@app.route('/logout/')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
+
+
+@app.route('/developer/')
+def developer():
+    return render_template('developer.html')
+
+
+@app.route('/buyer/')
+def buyer():
+    return render_template('buyer.html')
+
+
+@app.route('/product_detail/')
+def product_detail():
+    title = request.args.get('title')
+    list1 = db.get_product_detail(g.db, title)
+    return render_template('product_detail.html', list1=list1, bought=db.has_bought(g.db, title, session['uid']))
+
+
+@app.route('/buy/', methods=['POST'])
+def buy():
+    product_title = request.form['p_title']
+    db.buy_product(g.db, product_title, session['uid'])
+    return redirect(url_for('product_detail', title=product_title))
 
 
 if __name__ == '__main__':

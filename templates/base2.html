@@ -35,8 +35,8 @@
                     <li id="signup"><a href="#">Sign Up</a></li>
                     <li id="login"><a href="#">Log In</a></li>
                 {% else %}
-                    <li id="uname"><a href="#">if session['username'] </a></li>
-                    <li id="logout"><a href="#">Logout</a></li>
+                    <li id="uname"><a href="/{{ session['type'] }}">{{ session['username'] }} </a></li>
+                    <li id="logout"><a href="{{ url_for('logout') }}">Logout</a></li>
                 {% endif %}
                 <li><a href="#">Contact Us</a></li>
             </ul>
