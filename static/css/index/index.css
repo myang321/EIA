@@ -1,17 +1,25 @@
 #window_signup {
-    width: 500px;
-    background: #e8e8e8;
+    width: 400px;
+    background: #ffffff;
     border: 1px solid #dadada;
     font-family: sans-serif;
     padding: 5px 10px 20px 20px;
+    -moz-border-radius:10px; /* Firefox */
+    -webkit-border-radius: 10px; /* Safari, Chrome */
+    -khtml-border-radius: 10px; /* KHTML */
+    border-radius: 10px; /* CSS3 */
 }
 
 #window_login {
-    width: 500px;
-    background: #e8e8e8;
+    width: 400px;
+    background: #ffffff;
     border: 1px solid #dadada;
     font-family: sans-serif;
     padding: 5px 10px 20px 20px;
+    -moz-border-radius:10px; /* Firefox */
+    -webkit-border-radius: 10px; /* Safari, Chrome */
+    -khtml-border-radius: 10px; /* KHTML */
+    border-radius: 10px; /* CSS3 */
 }
 
 /*.billboard.light {*/
