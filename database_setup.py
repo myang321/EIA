@@ -11,6 +11,8 @@ DEVELOPERS_TABLE = "developers"
 BUYERS_TABLE = "buyers"
 PRODUCTS_TABLE = "products"
 ORDERS_TABLE = "orders"
+CATEGORY_FUNCTION = "category_function"
+CATEGORY_UI_STYLE = "category_ui_style"
 
 
 class User(object):
@@ -114,6 +116,48 @@ def is_email_exist(con, email, type):
     return False
 
 
+def get_category_function_id(con, title):
+    cursor = con.cursor()
+    sql = "select cid from {0} where title='{1}'".format(CATEGORY_FUNCTION, title)
+    cursor.execute(sql)
+    result = cursor.fetchone()
+    return result[0]
+
+
+def get_category_ui_style_id(con, title):
+    cursor = con.cursor()
+    sql = "select cid from {0} where title='{1}'".format(CATEGORY_UI_STYLE, title)
+    cursor.execute(sql)
+    result = cursor.fetchone()
+    return result[0]
+
+
+def search_by_category(con, c_func, c_ui):
+    cursor = con.cursor()
+    sql = "select * from {0} where c_function={1} and c_ui_style={2}".format(PRODUCTS_TABLE,
+                                                                             get_category_function_id(con, c_func),
+                                                                             get_category_ui_style_id(con, c_ui))
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    return result
+
+
+def get_category_function_list(con):
+    cursor = con.cursor()
+    sql = "SELECT title from {0}".format(CATEGORY_FUNCTION)
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    return result
+
+
+def get_category_ui_style_list(con):
+    cursor = con.cursor()
+    sql = "SELECT title from {0}".format(CATEGORY_UI_STYLE)
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    return result
+
+
 if __name__ == "__main__":
     con = conn()
     # cursor = con.cursor()
@@ -121,5 +165,10 @@ if __name__ == "__main__":
     # cursor.execute(sql)
     # r = cursor.fetchall()
     # r = buyers_authentication(con, "lily", "123")
-    # print r
-    u = Developer("ha", "123", "sadsaa@dasda.com")
+    # r=get_category_function_id(con,"travel")
+    # r = get_category_ui_style_id(con, "plain")
+    # r = search_by_category(con, "travel", "plain")
+    # r=get_category_function_list(con)
+    r = get_category_ui_style_list(con)
+    print r
+    # u = Developer("ha", "123", "sadsaa@dasda.com")

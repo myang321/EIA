@@ -69,5 +69,15 @@ def signup():
         return redirect(url_for('index', status=0))
 
 
+@app.route('/search')
+def search():
+    if request.method == 'POST':
+        c_func = request.form['c_func']
+        c_ui = request.form['c_ui']
+
+    else:
+        return render_template('search.html')
+
+
 if __name__ == '__main__':
     app.run()
