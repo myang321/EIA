@@ -13,6 +13,8 @@
     <link rel="stylesheet" type="text/css" href="/static/css/index/fancybox.css">
     <link rel="stylesheet" type="text/css" href="/static/css/index/animate.css">
     <link rel="stylesheet" type="text/css" href="/static/css/index/main.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/base2.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/signup.css">
 
     <script type="text/javascript" src="/static/js/index/jquery.js"></script>
     <script type="text/javascript" src="/static/js/index/fancybox.js"></script>
@@ -25,6 +27,7 @@
     {% endblock %}
 </head>
 <body>
+
 <section class="billboard light">
     <header class="wrapper light">
         <a href="/"><img class="logo" src="/static/img/index/logo_light.png" alt=""/></a>
@@ -42,12 +45,71 @@
             </ul>
         </nav>
     </header>
+    <dialog id="window_signup">
+        <h3>Sign Up</h3>
+
+        <form name="form" method="post" action={{ url_for("signup") }}>
+            <div class="form">
+                <div class="form-item">
+                    <select name="type">
+                        <option value="developer">developer</option>
+                        <option value="buyer">buyer</option>
+                    </select>
+                </div>
+                <div class="form-item">
+                    <input type="text" name="text" required="required" placeholder="Name" autocomplete="off">
+                </div>
+                <div class="form-item">
+                    <input type="text" name="text" required="required" placeholder="email" autocomplete="off">
+                </div>
+                <div class="form-item">
+                    <input type="password" name="password" required="required" placeholder="Password"
+                           autocomplete="off">
+                </div>
+                {#			<div class="button-panel">#}
+                {#				<input type="submit" id="exit_signup" title="Sign Up" value="close Dialog">#}
+                {#			</div>#}
+            </div>
+        </form>
+        <button id="exit_signup">Sign Up</button>
+    </dialog>
+
+    <dialog id="window_login">
+
+        <h3>Log in</h3>
+
+        <form name="form" method="post" action={{ url_for("login") }}>
+            <div class="form">
+                <div class="form-item">
+                    <select name="type">
+                        <option value="buyer">Buyer</option>
+                        <option value="developer">Developer</option>
+                    </select>
+                </div>
+                <div class="form-item">
+                    <input type="text" id="username" required="required" name="username" placeholder="username"
+                           value="{{ request.form['username'] }}">
+                </div>
+                <div class="form-item">
+                    <input type="password" id="password" name="password" required="required" placeholder="password">
+                </div>
+                <div class="form-item">
+                    <input type="submit" value="log in">
+                </div>
+                {#			<div class="button-panel">#}
+                {#				<input type="submit" id="exit_signup" title="Sign Up" value="close Dialog">#}
+                {#			</div>#}
+            </div>
+        </form>
+        <button id="exit_login">cancel</button>
+
+    </dialog>
     {% block body %}
     {% endblock %}
 </section>
 
 
-
+<script type="text/javascript" src="/static/js/base2.js"></script>
 {% block script %}
 {% endblock %}
 </body>
