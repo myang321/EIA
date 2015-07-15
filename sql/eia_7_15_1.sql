@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50403
 File Encoding         : 65001
 
-Date: 2015-07-14 22:12:54
+Date: 2015-07-15 16:30:23
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -89,6 +89,23 @@ CREATE TABLE `developers` (
 INSERT INTO `developers` VALUES ('1', 'dev1', '123', 'dev1@gmail.com');
 
 -- ----------------------------
+-- Table structure for `img`
+-- ----------------------------
+DROP TABLE IF EXISTS `img`;
+CREATE TABLE `img` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `url` varchar(2000) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `front` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of img
+-- ----------------------------
+INSERT INTO `img` VALUES ('11', 'static/upload\\2861282448.png', '28', '1');
+
+-- ----------------------------
 -- Table structure for `orders`
 -- ----------------------------
 DROP TABLE IF EXISTS `orders`;
@@ -121,7 +138,7 @@ CREATE TABLE `products` (
   `c_ui_style` int(11) DEFAULT NULL,
   PRIMARY KEY (`pid`),
   UNIQUE KEY `products_k1` (`title`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of products
@@ -131,3 +148,5 @@ INSERT INTO `products` VALUES ('2', 'uno', '1', 'Uno (/ˈuːnoʊ/; from Italian 
 INSERT INTO `products` VALUES ('4', 'uno2', '1', 'Uno (/ˈuːnoʊ/; from Italian and Spanish for \'one\') is an American card game which is played with a specially printed deck (see Mau Mau for an almost identical game played with normal playing cards). ', '29.99', '', '4', '2');
 INSERT INTO `products` VALUES ('5', 'uno3', '1', 'Uno (/ˈuːnoʊ/; from Italian and Spanish for \'one\') is an American card game which is played with a specially printed deck (see Mau Mau for an almost identical game played with normal playing cards). ', '39.99', '', '4', '1');
 INSERT INTO `products` VALUES ('6', 'uno4', '1', 'Uno (/ˈuːnoʊ/; from Italian and Spanish for \'one\') is an American card game which is played with a specially printed deck (see Mau Mau for an almost identical game played with normal playing cards). ', '49.88', '', '4', '1');
+INSERT INTO `products` VALUES ('7', 'weibo', '1', 'Sina Weibo (NASDAQ: WB) is a Chinese microblogging (weibo) website.', '199.00', '', '1', '1');
+INSERT INTO `products` VALUES ('28', 'app1', '1', 'sdcsd', '999.00', '', '1', '1');
