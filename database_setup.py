@@ -128,7 +128,6 @@ def get_category_function_id(con, title):
 def get_category_function_title(con, id):
     cursor = con.cursor()
     sql = "select title from {0} where cid={1}".format(CATEGORY_FUNCTION, id)
-    print sql
     cursor.execute(sql)
     result = cursor.fetchone()
     return result[0]
@@ -228,8 +227,7 @@ def buy_product(con, title, buyer_id):
 def has_bought(con, title, buyer_id):
     cursor = con.cursor()
     pid = get_product_id(con, title)
-    sql = "select * from {0} where pid={1} and buyer_id={2}".format(ORDERS_TABLE, pid, buyer_id)
-    print sql
+    sql = "select * from {0} where pid={1} and buyer_uid={2}".format(ORDERS_TABLE, pid, buyer_id)
     cursor.execute(sql)
     result = cursor.fetchone()
     print result
