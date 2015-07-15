@@ -1,77 +1,21 @@
 {% extends "base2.html" %}
 
 {% block head %}
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="/static/css/index/index.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/signup.css">
+
 {% endblock %}
 
 {% block body %}
-    <dialog id="window_signup" >
-        <h3>Sign Up</h3>
-        <form name="form" method="post" action={{ url_for("signup") }}>
-		<div class="form">
-            <div class="form-item">
-                <select name="type">
-                    <option value="developer">developer</option>
-                    <option value="buyer">buyer</option>
-                </select>
-            </div>
-			<div class="form-item">
-				<input type="text" name="text" required="required" placeholder="Name" autocomplete="off">
-			</div>
-			<div class="form-item">
-				<input type="text" name="text" required="required" placeholder="email" autocomplete="off">
-			</div>
-			<div class="form-item">
-				<input type="password" name="password" required="required" placeholder="Password" autocomplete="off">
-			</div>
-{#			<div class="button-panel">#}
-{#				<input type="submit" id="exit_signup" title="Sign Up" value="close Dialog">#}
-{#			</div>#}
-            <div class="form-item">
-                <input type="submit" value="Sign Up">
-            </div>
 
-        </div>
-	</form>
 
-        <button id="exit_signup">Cancel</button>
-    </dialog>
 
-    <dialog id="window_login">
 
-        <h3>Log in</h3>
-        <form name="form" method="post" action={{ url_for("login") }}>
-		<div class="form">
-            <div class="form-item">
-                <select name="type">
-                    <option value="buyer">Buyer</option>
-                    <option value="developer">Developer</option>
-                </select>
-            </div>
-			<div class="form-item">
-                <input type="text" id="username" required="required" name="username" placeholder="username"
-                       value="{{ request.form['username'] }}">
-			</div>
-			<div class="form-item">
-                <input type="password" id="password" name="password" required="required" placeholder="password">
-			</div>
-            <div class="form-item">
-                <input type="submit" value="log in">
-            </div>
-{#			<div class="button-panel">#}
-{#				<input type="submit" id="exit_signup" title="Sign Up" value="close Dialog">#}
-{#			</div>#}
-		</div>
-        </form>
-        <button id="exit_login">cancel</button>
 
-    </dialog>
 
 
     <div class="caption light animated wow fadeInDown clearfix">
         <h1 id="welcome1">Here You Are</h1>
-
 
         <p id="welcome2">we develop, you enjoy</p>
 
@@ -90,7 +34,7 @@
                     <option value="{{ i }}">{{ i }}</option>
                 {% endfor %}
             </select>
-            <input  id="searchButton" type="submit" value="Go!"/>
+            <input id="searchButton" type="submit" value="Go!"/>
         </form>
     </div>
 
