@@ -99,7 +99,7 @@ def is_buyer_email_exist(con, email):
 
 def is_dev_email_exist(con, email):
     cursor = con.cursor()
-    sql = "select * from {0} where email='{1}'".format(DEVELOPERS_TABLE, email)
+    sql = "select * from developers where email='{0}'".format(email)
     cursor.execute(sql)
     result = cursor.fetchone()
     if result == None:

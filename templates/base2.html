@@ -48,6 +48,7 @@
         </nav>
     </header>
     <dialog id="window_signup">
+
         <h3>Sign Up</h3>
 
         <form name="form" method="post" action={{ url_for("signup") }}>
@@ -59,21 +60,27 @@
                     </select>
                 </div>
                 <div class="form-item">
-                    <input type="text" name="text" required="required" placeholder="Name" autocomplete="off">
-                </div>
-                <div class="form-item">
-                    <input type="text" name="text" required="required" placeholder="email" autocomplete="off">
-                </div>
-                <div class="form-item">
-                    <input type="password" name="password" required="required" placeholder="Password"
+                    <input type="text" name="username" id="username" required="required" placeholder="username"
                            autocomplete="off">
                 </div>
-                {#			<div class="button-panel">#}
-                {#				<input type="submit" id="exit_signup" title="Sign Up" value="close Dialog">#}
-                {#			</div>#}
+                <div class="form-item">
+                    <input type="text" id="email" name="email" required="required" placeholder="email"
+                           autocomplete="off">
+                </div>
+                <div class="form-item">
+                    <input type="password" id="password" name="password" required="required" placeholder="Password"
+                           autocomplete="off">
+                </div>
+                {% if msg!=None %}
+                    {{ msg }}
+                {% endif %}
+
             </div>
+            <button id="exit_signup1" type="submit">Sign Up</button>
+            <button id="exit_signup">Cancel</button>
         </form>
-        <button id="exit_signup">Sign Up</button>
+
+
     </dialog>
 
     <dialog id="window_login">
@@ -95,15 +102,17 @@
                 <div class="form-item">
                     <input type="password" id="password" name="password" required="required" placeholder="password">
                 </div>
-                <div class="form-item">
-                    <input type="submit" value="log in">
-                </div>
+                {#                <div class="form-item">#}
+                {#                    <input type="submit" value="log in">#}
+                {#                </div>#}
                 {#			<div class="button-panel">#}
                 {#				<input type="submit" id="exit_signup" title="Sign Up" value="close Dialog">#}
                 {#			</div>#}
+                <button id="exit_login1" type="submit">Log in</button>
+                <button id="exit_login">cancel</button>
             </div>
         </form>
-        <button id="exit_login">cancel</button>
+
 
     </dialog>
     {% block body %}

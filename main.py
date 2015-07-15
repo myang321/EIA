@@ -61,12 +61,17 @@ def signup():
         if db.is_email_exist(g.db, email, type):
             msg = "email already used"
             return redirect(url_for('index', status=1, msg=msg))
-        if type == 'dev':
+        if type == 'developer':
             dev = db.Developer(username, password, email)
             db.add_developer(g.db, dev)
+            result = db.developers_authentication(g.db, username, password)
         elif type == 'buyer':
             buyer = db.Buyer(username, password, email)
             db.add_buyer(g.db, buyer)
+            result = db.buyers_authentication(g.db, username, password)
+        session['username'] = username
+        session['type'] = type
+        session['uid'] = result[0]
         return redirect(url_for('index', status=0))
     else:
         return redirect(url_for('index', status=0))
@@ -104,7 +109,11 @@ def buyer():
 def product_detail():
     title = request.args.get('title')
     list1 = db.get_product_detail(g.db, title)
-    return render_template('product_detail.html', list1=list1, bought=db.has_bought(g.db, title, session['uid']))
+    if session.get('uid') == None:
+        bought = False
+    else:
+        bought = db.has_bought(g.db, title, session['uid'])
+    return render_template('product_detail.html', list1=list1, bought=bought)
 
 
 @app.route('/buy/', methods=['POST'])

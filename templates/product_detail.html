@@ -1,22 +1,90 @@
 {% extends "base2.html" %}
 
 {% block head %}
+    <link rel="stylesheet" type="text/css" href="/static/css/search.css">
 {% endblock %}
 
 {% block body %}
-    <div>{{ list1[1] }}</div>
-    <div>{{ list1[2] }}</div>
-    <div>{{ list1[3] }}</div>
-    <div>{{ list1[6] }}</div>
-    <div>{{ list1[7] }}</div>
-    {% if bought==False %}
-        <form class="form" method="post" action={{ url_for("buy") }}>
-            <input type="hidden" name="p_title" value="{{ list1[1] }}">
-            <input id="detail" type="submit" value="Buy"/>
-        </form>
-    {% else %}
-        <div>You have bought it</div>
-    {% endif %}
+    <section class="content-wrapper">
+        <div class="content-container container">
+            <div class="main">
+
+                <div class="product-info-box">
+                    <div class="product-essential">
+
+
+                        <div class="product-img-box">
+                            <p class="product-image-zoom">
+                                <img src="/static/img/1.png" alt="Item-PNG"></p>
+                        </div>
+                        <div class="product-shop" id="name">
+                            <h3 class="product-name">{{ list1[1] }}</h3>
+                            <br><br>
+
+                            <div class="price-box" id="price">
+                                <span class="price">&nbsp;&nbsp;&nbsp;$<a>{{ list1[3] }}</a></span>
+                            </div>
+                            <br>
+                            <br>
+
+                            <div class="add-to-cart-box">
+							<span class="qty-box">
+								<br><br>
+								<label for="qty">Qty:</label>
+								<a href="javascript:void(0)" title="" class="prev add"><img
+                                        src="/static/img/qty_prev.png" title="" alt="add">‹</a>
+								<input type="text" value="1" maxlength="12" id="qty" class="input-text qty" name="qty">
+								<a href="javascript:void(0)" title="" class="next dec add"><img
+                                        src="/static/img/qty_next.png" title="" alt="">›</a>
+							</span>
+
+                            </div>
+                            {% if bought==False %}
+                                <div class="add-to-cart-box">
+                                    <br><br>
+                                    <input class="form-button" title="Buy" value="Buy" type="button">
+                                </div>
+                                {% else %}#}
+                                <div>You have bought it</div>
+                            {% endif %}
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <section class="product-collateral">
+                    <ul class="tab-block">
+                        <li><a href="#pro-detail" title="Description" class="active">Description</a></li>
+                    </ul>
+                    <div id="pro-detail" class="pro-detail commonContent">
+                        <ol>
+                        </ol>
+                        <p>
+                            {{ list1[2] }}
+                        </p>
+                    </div>
+
+
+                </section>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </section>
+
+    {#    <div>{{ list1[1] }}</div>#}
+    {#    <div>{{ list1[2] }}</div>#}
+    {#    <div>{{ list1[3] }}</div>#}
+    {#    <div>{{ list1[6] }}</div>#}
+    {#    <div>{{ list1[7] }}</div>#}
+    {#    {% if bought==False %}#}
+    {#        <form class="form" method="post" action={{ url_for("buy") }}>#}
+    {#            <input type="hidden" name="p_title" value="{{ list1[1] }}">#}
+    {#            <input id="detail" type="submit" value="Buy"/>#}
+    {#        </form>#}
+    {#    {% else %}#}
+    {#        <div>You have bought it</div>#}
+    {#    {% endif %}#}
 {% endblock %}
 
 {% block script %}

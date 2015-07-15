@@ -9,7 +9,8 @@
                         <ul class="product-grid">
                     {% endif %}
                 <li>
-                    <div class="pro-img"><a href="#"><img src="/static/img/1.png"
+                    <div class="pro-img"><a href="{{ url_for('product_detail',title=list1[i][1]) }}"><img
+                            src="/static/img/1.png"
                                                           alt="Laptop"></a></div>
                     <div class="pro-content"><p>{{ list1[i][1] }}</p></div>
                     <div class="pro-price">{{ list1[i][3] }}</div>
