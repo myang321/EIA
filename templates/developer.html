@@ -20,7 +20,29 @@
                 {% include 'search_grid2.html' %}
             </div>
             <div class="tab-pane" id="tab3">
-                <p>Howdy, I'm in Section 3.</p>
+                <form enctype="multipart/form-data" action="{{ url_for('upload') }}"
+                      method="POST">
+                    <input type="hidden" name="MAX_FILE_SIZE" value="100000"/>
+                    <input type="text" name="title" placeholder="title"><br>
+                    <input type="text" name="price" placeholder="price"><br>
+                    <textarea id="description" name="description"></textarea><br>
+                    <select name="c_func">
+                        <option value="all">Select your funtion</option>
+                        {% for i in c_func %}
+                            <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <select name="c_ui">
+                        <option value="all">Select your UI style</option>
+                        {% for i in c_ui %}
+                            <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    Choose a file to upload: <input name="img" type="file"/><br/>
+                    <input type="submit" value="Upload File"/>
+                </form>
             </div>
         </div>
     </div>

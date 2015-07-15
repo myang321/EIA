@@ -9,11 +9,11 @@
                         <ul class="product-grid">
                     {% endif %}
                 <li>
-                    <div class="pro-img"><a href="{{ url_for('product_detail',title=list1[i][1]) }}"><img
-                            src="/static/img/1.png"
-                                                          alt="Laptop"></a></div>
-                    <div class="pro-content"><p>{{ list1[i][1] }}</p></div>
-                    <div class="pro-price">{{ list1[i][4] }}</div>
+                    <div class="pro-img"><a href="{{ url_for('product_detail',title=list1[i].title) }}"><img
+                            src="{{ list1[i].img_list[0] }}"
+                            alt="Laptop"></a></div>
+                    <div class="pro-content"><p>{{ list1[i].title }}</p></div>
+                    <div class="pro-price">{{ list1[i].price }}</div>
                     <div class="pro-link-block">
                         <div class="clearfix"></div>
                     </div>

@@ -2,6 +2,7 @@
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="/static/css/search.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/colors.css">
 {% endblock %}
 
 {% block body %}
@@ -15,14 +16,14 @@
 
                         <div class="product-img-box">
                             <p class="product-image-zoom">
-                                <img src="/static/img/1.png" alt="Item-PNG"></p>
+                                <img src="{{ p.img_list[0] }}" alt="Item-PNG"></p>
                         </div>
                         <div class="product-shop" id="name">
-                            <h3 class="product-name">{{ list1[1] }}</h3>
+                            <h3 class="product-name">{{ p.title }}</h3>
                             <br><br>
 
                             <div class="price-box" id="price">
-                                <span class="price">&nbsp;&nbsp;&nbsp;$<a>{{ list1[4] }}</a></span>
+                                <span class="price">&nbsp;&nbsp;&nbsp;$<a>{{ p.price }}</a></span>
                             </div>
                             <br>
                             <br>
@@ -44,7 +45,7 @@
                                     <br><br>
                                     <input class="form-button" title="Buy" value="Buy" type="button">
                                 </div>
-                                {% else %}#}
+                            {% else %}
                                 <div>You have bought it</div>
                             {% endif %}
                         </div>
@@ -61,7 +62,7 @@
                         <ol>
                         </ol>
                         <p>
-                            {{ list1[2] }}
+                            {{ p.description }}
                         </p>
                     </div>
 
