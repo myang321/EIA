@@ -124,14 +124,14 @@ h5, h6 {
     position: relative;
 }
 
-.billboard.light {
-    background: url('/static/img/index/billboard.jpg') no-repeat;
+/*.billboard.light {*/
+    /*background: url('/static/img/index/billboard.jpg') no-repeat;*/
 
-    background-size: cover;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-}
+    /*background-size: cover;*/
+    /*-webkit-background-size: cover;*/
+    /*-moz-background-size: cover;*/
+    /*-o-background-size: cover;*/
+/*}*/
 
 .billboard .shadow {
     position: absolute;

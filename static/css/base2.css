@@ -21,3 +21,16 @@
     -khtml-border-radius: 10px; /* KHTML */
     border-radius: 10px; /* CSS3 */
 }
+
+.billboard.light {
+    background: url('/static/img/index/billboard.jpg') no-repeat;
+
+    background-size: cover;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+}
+
+/*.base_class {*/
+/*background: url('/static/img/index/billboard2.jpg') no-repeat;*/
+/*}*/

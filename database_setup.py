@@ -128,6 +128,7 @@ def get_category_function_id(con, title):
 def get_category_function_title(con, id):
     cursor = con.cursor()
     sql = "select title from {0} where cid={1}".format(CATEGORY_FUNCTION, id)
+    print sql
     cursor.execute(sql)
     result = cursor.fetchone()
     return result[0]
@@ -165,8 +166,8 @@ def search_by_category(con, c_func, c_ui):
     result = cursor.fetchall()
     lists = [list(row) for row in result]
     for row in lists:
-        row.append(get_category_function_title(con, row[5]))
-        row.append(get_category_ui_style_title(con, row[6]))
+        row.append(get_category_function_title(con, row[6]))
+        row.append(get_category_ui_style_title(con, row[7]))
     return lists
 
 
@@ -196,8 +197,8 @@ def get_product_detail(con, title):
     cursor.execute(sql)
     result = cursor.fetchone()
     list1 = list(result)
-    list1.append(get_category_function_title(con, result[5]))
-    list1.append(get_category_ui_style_title(con, result[6]))
+    list1.append(get_category_function_title(con, result[6]))
+    list1.append(get_category_ui_style_title(con, result[7]))
     return list1
 
 
@@ -238,6 +239,44 @@ def has_bought(con, title, buyer_id):
         return False
 
 
+def get_buyer_orders(con, bid):
+    cursor = con.cursor()
+    sql = "select p.*,o.date from {0}  as p, {1} as o where o.buyer_uid={2} and p.pid=o.pid".format(PRODUCTS_TABLE,
+                                                                                                    ORDERS_TABLE, bid)
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    lists = [list(row) for row in result]
+    for row in lists:
+        row.append(get_category_function_title(con, row[6]))
+        row.append(get_category_ui_style_title(con, row[7]))
+    return lists
+
+
+def get_developers_products(con, dev_id):
+    cursor = con.cursor()
+    sql = "select * from {0} where dev_uid={1}".format(PRODUCTS_TABLE, dev_id)
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    lists = [list(row) for row in result]
+    for row in lists:
+        row.append(get_category_function_title(con, row[6]))
+        row.append(get_category_ui_style_title(con, row[7]))
+    return lists
+
+
+def get_developer_orders(con, dev_id):
+    cursor = con.cursor()
+    sql = "select * from {0} as p , {1} as o where p.dev_uid={2} and o.pid=p.pid".format(PRODUCTS_TABLE,
+                                                                                         ORDERS_TABLE, dev_id)
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    lists = [list(row) for row in result]
+    for row in lists:
+        row.append(get_category_function_title(con, row[6]))
+        row.append(get_category_ui_style_title(con, row[7]))
+    return lists
+
+
 if __name__ == "__main__":
     con = conn()
     # cursor = con.cursor()
@@ -251,6 +290,7 @@ if __name__ == "__main__":
     # r = get_category_function_list(con)
     # r = get_category_ui_style_list(con)
     # r = get_category_ui_style_title(con, 2)
-    r = get_product_detail(con, 'airbnb')
+    # r = get_product_detail(con, 'airbnb')
+    r = get_buyer_orders(con, 1)
     print r
     # u = Developer("ha", "123", "sadsaa@dasda.com")

@@ -78,10 +78,10 @@ def search():
         c_func = request.form['c_func']
         c_ui = request.form['c_ui']
         list1 = db.search_by_category(g.db, c_func, c_ui)
-        return render_template('search.html', list1=list1, len=len(list1))
+        return render_template('search.html', list1=list1)
     else:
         list1 = db.search_by_category(g.db, 'all', 'all')
-        return render_template('search.html', list1=list1, len=len(list1))
+        return render_template('search.html', list1=list1)
 
 
 @app.route('/logout/')
@@ -92,12 +92,15 @@ def logout():
 
 @app.route('/developer/')
 def developer():
-    return render_template('developer.html')
+    list1 = db.get_developers_products(g.db, session['uid'])
+    list2 = db.get_developer_orders(g.db, session['uid'])
+    return render_template('developer.html', list1=list1, list2=list2)
 
 
 @app.route('/buyer/')
 def buyer():
-    return render_template('buyer.html')
+    list1 = db.get_buyer_orders(g.db, session['uid'])
+    return render_template('buyer.html', list1=list1)
 
 
 @app.route('/product_detail/')
