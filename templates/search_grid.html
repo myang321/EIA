@@ -1,0 +1,30 @@
+<section class="content-wrapper">
+    <div class="content-container container">
+        <div class="col-main">
+
+            <div class="new-product-block">
+                {% for i in range(len) %}
+
+                    {% if i%4==0 %}
+                        <ul class="product-grid">
+                    {% endif %}
+                <li>
+                    <div class="pro-img"><a href="#"><img src="/static/img/1.png"
+                                                          alt="Laptop"></a></div>
+                    <div class="pro-content"><p>{{ list1[i][1] }}</p></div>
+                    <div class="pro-price">{{ list1[i][3] }}</div>
+                    <div class="pro-link-block">
+                        <div class="clearfix"></div>
+                    </div>
+                </li>
+                {% if i%4==3 %}
+                    </ul>
+                {% endif %}
+
+
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+</section>

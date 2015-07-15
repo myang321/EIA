@@ -65,5 +65,6 @@ form {
     text-align: center;
     text-transform: uppercase;
     transition: background 0.3s ease-in-out;
-    width: 100%;
+    width: 400px;
+    padding: 0 16px;
 }

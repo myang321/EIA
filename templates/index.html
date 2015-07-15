@@ -28,9 +28,14 @@
 {#			<div class="button-panel">#}
 {#				<input type="submit" id="exit_signup" title="Sign Up" value="close Dialog">#}
 {#			</div>#}
-		</div>
+            <div class="form-item">
+                <input type="submit" value="Sign Up">
+            </div>
+
+        </div>
 	</form>
-        <button id="exit_signup">Sign Up</button>
+
+        <button id="exit_signup">Cancel</button>
     </dialog>
 
     <dialog id="window_login">
@@ -46,14 +51,14 @@
             </div>
 			<div class="form-item">
                 <input type="text" id="username" required="required" name="username" placeholder="username"
-                   value="{{ request.form['username'] }}">
+                       value="{{ request.form['username'] }}">
 			</div>
 			<div class="form-item">
                 <input type="password" id="password" name="password" required="required" placeholder="password">
 			</div>
             <div class="form-item">
                 <input type="submit" value="log in">
-			</div>
+            </div>
 {#			<div class="button-panel">#}
 {#				<input type="submit" id="exit_signup" title="Sign Up" value="close Dialog">#}
 {#			</div>#}

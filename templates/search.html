@@ -1,19 +1,14 @@
 {% extends "base2.html" %}
 
 {% block head %}
+    <link rel="stylesheet" type="text/css" href="/static/css/search.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/colors.css">
+
 {% endblock %}
 
 {% block body %}
-    {% for i in list1 %}
-        <div>{{ i[1] }}</div>
-        <div>{{ i[2] }}</div>
-        <div>{{ i[3] }}</div>
-        <div>{{ i[7] }}</div>
-        <div>{{ i[8] }}</div>
-        <a href={{ url_for('product_detail',title=i[1]) }}>
-            <button id="buy">Detail</button>
-        </a>
-    {% endfor %}
+
+    {% include 'search_grid.html' %}
 {% endblock %}
 
 {% block script %}

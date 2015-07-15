@@ -78,10 +78,10 @@ def search():
         c_func = request.form['c_func']
         c_ui = request.form['c_ui']
         list1 = db.search_by_category(g.db, c_func, c_ui)
-        return render_template('search.html', list1=list1)
+        return render_template('search.html', list1=list1, len=len(list1))
     else:
         list1 = db.search_by_category(g.db, 'all', 'all')
-        return render_template('search.html', list1=list1)
+        return render_template('search.html', list1=list1, len=len(list1))
 
 
 @app.route('/logout/')
