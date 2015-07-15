@@ -2,6 +2,14 @@
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="/static/css/search.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/colors.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/img_detail/style.css"/>
+    <script type="text/javascript" src="/static/css/img_detail/jquery.js"></script>
+    <style>
+        body {
+            background-image: url("/static/img/index/billboard.jpg");
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
@@ -15,7 +23,36 @@
 
                         <div class="product-img-box">
                             <p class="product-image-zoom">
-                                <img src="/static/img/1.png" alt="Item-PNG"></p>
+
+                            <div id="wowslider-container1">
+                                <div class="ws_images">
+                                    <ul>
+                                        <li><img src="/static/img/1.png" alt="1" title="1" id="wows1_0"/>
+                                        </li>
+                                        <li><img src="/static/img/1.png" alt="2"
+                                                 title="2" id="wows1_1"/></li>
+                                        <li><a href="http://wowslider.com"><img src="/static/img/1.png"
+                                                                                alt="jquery gallery" title="psb (1)"
+                                                                                id="wows1_2"/></a></li>
+                                        <li><img src="/static/img/1.png" alt="psb" title="psb" id="wows1_3"/></li>
+                                    </ul>
+                                </div>
+                                <div class="ws_bullets">
+                                    <div>
+                                        <a href="#" title="1"><span><img src="/static/img/1.png"
+                                                                         alt="LYZ_6641"/>1</span></a>
+                                        <a href="#" title="2"><span><img src="/static/img/1.png"
+                                                                         alt="OX~UJH8CIY}CZR((]8TIRDS"/>2</span></a>
+                                        <a href="#" title="3"><span><img src="/static/img/1.png" alt="psb (1)"/>3</span></a>
+                                        <a href="#" title="4"><span><img src="/static/img/1.png"
+                                                                         alt="psb"/>4</span></a>
+                                    </div>
+                                </div>
+                                <div class="ws_script" style="position:absolute;left:-99%"><a
+                                        href="http://wowslider.com">slider js</a> by WOWSlider.com v8.1m
+                                </div>
+                                <div class="ws_shadow"></div>
+                            </div>
                         </div>
                         <div class="product-shop" id="name">
                             <h3 class="product-name">{{ list1[1] }}</h3>
@@ -88,4 +125,6 @@
 {% endblock %}
 
 {% block script %}
+    <script type="text/javascript" src="/static/css/img_detail/wowslider.js"></script>
+    <script type="text/javascript" src="/static/css/img_detail/script.js"></script>
 {% endblock %}
