@@ -87,8 +87,8 @@ def search():
         list1 = db.search_by_category(g.db, c_func, c_ui)
     else:
         list1 = db.search_by_category(g.db, 'all', 'all')
-    print "list1", list1
-    return render_template('search.html', list1=list1)
+    editable = False
+    return render_template('search.html', list1=list1, editable=editable)
 
 
 @app.route('/logout/')
@@ -103,13 +103,18 @@ def developer():
     list2 = db.get_developer_orders(g.db, session['uid'])
     c_func = db.get_category_function_list(g.db)
     c_ui = db.get_category_ui_style_list(g.db)
-    return render_template('developer.html', list1=list1, list2=list2, c_func=c_func, c_ui=c_ui)
+    editable = True
+    p = db.Product()
+    is_new = True
+    return render_template('developer.html', list1=list1, list2=list2, c_func=c_func, c_ui=c_ui, editable=editable, p=p,
+                           is_new=is_new)
 
 
 @app.route('/buyer/')
 def buyer():
     list1 = db.get_buyer_orders(g.db, session['uid'])
-    return render_template('buyer.html', list1=list1)
+    editable = False
+    return render_template('buyer.html', list1=list1, editable=editable)
 
 
 @app.route('/product_detail/')
@@ -131,19 +136,44 @@ def buy():
 
 
 @app.route('/upload/', methods=['POST'])
-def upload():
+def upload_product():
     product_title = request.form['title']
     price = request.form['price']
     description = request.form['description']
     c_func = request.form['c_func']
     c_ui = request.form['c_ui']
-    new_product = db.Product(product_title, price, description, c_func, c_ui, session['uid'])
-    pid = db.save_product(g.db, new_product)
+    is_new = request.form['is_new']
+    old_title = request.form.get('old_title')
+    product = db.Product(product_title, price, description, c_func, c_ui, session['uid'])
+    if is_new == "True":
+        pid = db.save_product(g.db, product)
+    else:
+        pid = db.update_product(g.db, product, old_title)
     file_list = request.files.getlist('img')
     for f in file_list:
         print "f name", f.filename
         db.save_image(g.db, f, pid)
     return redirect(url_for('developer'))
+
+
+@app.route('/edit_product/', methods=['GET', 'POST'])
+def edit_product():
+    if request.method == 'POST':
+        pass
+    else:
+        p_title = request.args.get('p_title')
+        product = db.get_product_detail(g.db, p_title)
+        c_func = db.get_category_function_list(g.db)
+        c_ui = db.get_category_ui_style_list(g.db)
+        is_new = False
+        return render_template('edit_product.html', p=product, c_func=c_func, c_ui=c_ui, is_new=is_new)
+
+
+@app.route('/delete_product/', methods=['POST'])
+def delete_product():
+    product_title = request.form['p_title']
+    db.delete_product(g.db, product_title)
+    return render_template('developer.html')
 
 
 if __name__ == '__main__':

@@ -16,7 +16,7 @@ IMG_TABLE = "img"
 
 CATEGORY_FUNCTION = "category_function"
 CATEGORY_UI_STYLE = "category_ui_style"
-UPLOAD_FOLDER = 'static/upload'
+UPLOAD_FOLDER = 'static/upload/'
 
 
 def get_random_number_str():
@@ -41,7 +41,7 @@ class Developer(User):
 
 
 class Product(object):
-    def __init__(self, title, price, description, c_func, c_ui, dev_uid, img_list=None):
+    def __init__(self, title='', price='', description='', c_func='', c_ui='', dev_uid='', img_list=None):
         self.title = title
         self.price = price
         self.description = description
@@ -50,15 +50,8 @@ class Product(object):
         self.dev_uid = dev_uid
         self.img_list = img_list
         if self.img_list:
-            if not 'SERVER_SOFTWARE' in os.environ:
-                self.img_list = ['/' + str.replace('\\', '/') for str in self.img_list]
-
-                # for e in self.img_list:
-                # print "in Product *************", e
-                # # e = e.decode('string_escape')
-                # e = e.replace('\\', '/')
-                # print "in Product", e
-                # print ""
+            if 'SERVER_SOFTWARE' not in os.environ:
+                self.img_list = ['/' + UPLOAD_FOLDER + str for str in self.img_list]
 
 
 def conn():
@@ -172,6 +165,7 @@ def get_category_ui_style_id(con, title):
 def get_category_ui_style_title(con, id):
     cursor = con.cursor()
     sql = "select title from {0} where cid={1}".format(CATEGORY_UI_STYLE, id)
+    print sql
     cursor.execute(sql)
     result = cursor.fetchone()
     return result[0]
@@ -183,7 +177,7 @@ def search_by_category(con, c_func, c_ui):
     elif c_ui == 'all':
         sql = "select * from {0} where c_function={1}".format(PRODUCTS_TABLE, get_category_function_id(con, c_func))
     elif c_func == 'all':
-        sql = "select * from {0} where c_ui_style={1}".format(PRODUCTS_TABLE, get_category_ui_style_title(con, c_ui))
+        sql = "select * from {0} where c_ui_style={1}".format(PRODUCTS_TABLE, get_category_ui_style_id(con, c_ui))
     else:
         sql = "select * from {0} where c_function={1} and c_ui_style={2}".format(PRODUCTS_TABLE,
                                                                                  get_category_function_id(con, c_func),
@@ -307,6 +301,15 @@ def save_product(con, p):
     return pid
 
 
+def update_product(con, p, old_title):
+    sql = "update {0} set title='{1}' , price={2}, description='{3}' , c_function={4}, c_ui_style={5} where title='{6}'".format(
+        PRODUCTS_TABLE, p.title, p.price, p.description, get_category_function_id(con, p.c_func),
+        get_category_ui_style_id(con, p.c_ui), old_title)
+    execute_non_query(con, sql)
+    pid = get_product_id(con, p.title)
+    return pid
+
+
 def save_img_url(con, url, pid, is_front):
     sql = "insert into {0} (url,pid,front) values('{1}',{2},{3})".format(IMG_TABLE, url, pid, is_front)
     execute_non_query(con, sql)
@@ -334,7 +337,8 @@ def execute_non_query(con, sql):
 
 def save_image(con, file1, pid):
     # filename = str(pid) + '_' + get_random_number_str() + '_' + file1.filename
-    filename = str(pid) + get_random_number_str() + file1.filename
+    ext = file1.filename.split('.')[-1]
+    filename = str(pid) + get_random_number_str() + '.' + ext
     print "save image file1 name", file1.filename
     if 'SERVER_SOFTWARE' in os.environ:
         from sae.storage import Bucket
@@ -343,10 +347,9 @@ def save_image(con, file1, pid):
         bucket.put_object(filename, file1)
         url = bucket.generate_url(filename)
     else:
-        filename = os.path.join(UPLOAD_FOLDER, filename)
-        print filename
-        file1.save(filename)
-        url = re.escape(filename)
+        url = filename
+        file_full_path = os.path.join(UPLOAD_FOLDER, filename)
+        file1.save(file_full_path)
     save_img_url(con, url, pid, 1)
 
 
@@ -355,6 +358,11 @@ def get_product_img(con, pid):
     result = execute_select_all(con, sql)
     list1 = [row[0] for row in result]
     return list1
+
+
+def delete_product(con, p_title):
+    sql = "delete from {0} where title='{1}'".format(PRODUCTS_TABLE, p_title)
+    execute_non_query(con, sql)
 
 
 if __name__ == "__main__":

@@ -14,6 +14,18 @@
                             alt="Laptop"></a></div>
                     <div class="pro-content"><p>{{ list1[i].title }}</p></div>
                     <div class="pro-price">{{ list1[i].price }}</div>
+                    {% if editable %}
+                        <a href="{{ url_for('edit_product',p_title=list1[i].title) }}">
+                            <button type="button">Edit</button>
+                        </a>
+                        <button id="delete_button" form="delete_form">Delete</button>
+                        <form id="delete_form" action="{{ url_for('delete_product') }}" method="POST">
+                            <input type="hidden" name="p_title" value="{{ list1[i].title }}">
+                        </form>
+
+
+                    {% endif %}
+
                     <div class="pro-link-block">
                         <div class="clearfix"></div>
                     </div>
@@ -29,3 +41,10 @@
         </div>
     </div>
 </section>
+<script>
+    $(document).ready(function () {
+        $('#delete_button').click(function () {
+            return confirm('Are you sure to delete this product?');
+        });
+    });
+</script>

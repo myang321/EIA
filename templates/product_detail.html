@@ -22,8 +22,6 @@
 
 
                         <div class="product-img-box">
-                            <p class="product-image-zoom">
-                                {#                                <-- <img src="{{ p.img_list[0] }}" alt="Item-PNG"></p> -->#}
 
                             <div id="wowslider-container1">
                                 <div class="ws_images">
@@ -72,7 +70,8 @@
 
                                     <form action="{{ url_for('buy') }}" method="POST">
                                         <input type="hidden" name="p_title" value="{{ p.title }}">
-                                        <input class="form-button" title="Buy" value="Buy" type="submit">
+                                        <input class="form-button" title="Buy" id="buy_button" value="Buy"
+                                               type="submit">
                                     </form>
                                 </div>
                             {% else %}
@@ -124,4 +123,11 @@
 {% block script %}
     <script type="text/javascript" src="/static/css/img_detail/wowslider.js"></script>
     <script type="text/javascript" src="/static/css/img_detail/script.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#buy_button').click(function () {
+                return confirm('Are you sure to buy this product?');
+            });
+        });
+    </script>
 {% endblock %}
