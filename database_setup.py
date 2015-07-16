@@ -50,13 +50,15 @@ class Product(object):
         self.dev_uid = dev_uid
         self.img_list = img_list
         if self.img_list:
-            self.img_list = ['/' + str.replace('\\', '/') for str in self.img_list]
-            # for e in self.img_list:
-            # print "in Product *************", e
-            # # e = e.decode('string_escape')
-            # e = e.replace('\\', '/')
-            # print "in Product", e
-            # print ""
+            if not 'SERVER_SOFTWARE' in os.environ:
+                self.img_list = ['/' + str.replace('\\', '/') for str in self.img_list]
+
+                # for e in self.img_list:
+                # print "in Product *************", e
+                # # e = e.decode('string_escape')
+                # e = e.replace('\\', '/')
+                # print "in Product", e
+                # print ""
 
 
 def conn():
@@ -178,14 +180,15 @@ def get_category_ui_style_title(con, id):
 def search_by_category(con, c_func, c_ui):
     if c_func == 'all' and c_ui == 'all':
         sql = "select * from {0}".format(PRODUCTS_TABLE)
-    elif c_func != 'all':
+    elif c_ui == 'all':
         sql = "select * from {0} where c_function={1}".format(PRODUCTS_TABLE, get_category_function_id(con, c_func))
-    elif c_ui != 'all':
+    elif c_func == 'all':
         sql = "select * from {0} where c_ui_style={1}".format(PRODUCTS_TABLE, get_category_ui_style_title(con, c_ui))
     else:
         sql = "select * from {0} where c_function={1} and c_ui_style={2}".format(PRODUCTS_TABLE,
                                                                                  get_category_function_id(con, c_func),
                                                                                  get_category_ui_style_id(con, c_ui))
+    print sql
     result = execute_select_all(con, sql)
     list1 = []
     for row in result:
@@ -244,12 +247,10 @@ def get_product_id(con, title):
 # result = cursor.fetchone()
 # return result[0]
 
-def buy_product(con, title, buyer_id):
-    cursor = con.cursor()
+def create_order(con, title, buyer_id):
     pid = get_product_id(con, title)
-    sql = "insert into {0} (pid,buyer_id) values({1},{2})".format(ORDERS_TABLE, pid, buyer_id)
-    cursor.execute(sql)
-    con.commit()
+    sql = "insert into {0} (pid,buyer_uid) values({1},{2})".format(ORDERS_TABLE, pid, buyer_id)
+    execute_non_query(con, sql)
 
 
 def has_bought(con, title, buyer_id):
@@ -269,11 +270,11 @@ def get_buyer_orders(con, bid):
     sql = "select p.*,o.date from {0}  as p, {1} as o where o.buyer_uid={2} and p.pid=o.pid".format(PRODUCTS_TABLE,
                                                                                                     ORDERS_TABLE, bid)
     result = execute_select_all(con, sql)
-    lists = [list(row) for row in result]
-    for row in lists:
-        row.append(get_category_function_title(con, row[6]))
-        row.append(get_category_ui_style_title(con, row[7]))
-    return lists
+    list1 = []
+    for row in result:
+        product = relation_to_object_mapping_product(con, row)
+        list1.append(product)
+    return list1
 
 
 def get_developers_products(con, dev_id):
@@ -336,13 +337,17 @@ def save_image(con, file1, pid):
     filename = str(pid) + get_random_number_str() + file1.filename
     print "save image file1 name", file1.filename
     if 'SERVER_SOFTWARE' in os.environ:
-        pass
+        from sae.storage import Bucket
+
+        bucket = Bucket('domain1')
+        bucket.put_object(filename, file1)
+        url = bucket.generate_url(filename)
     else:
         filename = os.path.join(UPLOAD_FOLDER, filename)
         print filename
         file1.save(filename)
-        filename = re.escape(filename)
-    save_img_url(con, filename, pid, 1)
+        url = re.escape(filename)
+    save_img_url(con, url, pid, 1)
 
 
 def get_product_img(con, pid):

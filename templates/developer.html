@@ -15,10 +15,18 @@
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="tab1">
-                {% include 'search_grid.html' %}
+                {% if list1|length==0 %}
+                    <div>Your havn't upload any product.</div>
+                {% else %}
+                    {% include 'search_grid.html' %}
+                {% endif %}
             </div>
             <div class="tab-pane" id="tab2">
-                {% include 'search_grid2.html' %}
+                {% if list2|length==0 %}
+                    <div>You haven't sold any product yet.</div>
+                {% else %}
+                    {% include 'search_grid2.html' %}
+                {% endif %}
             </div>
             <div class="tab-pane" id="tab3">
                 <form enctype="multipart/form-data" action="{{ url_for('upload') }}"

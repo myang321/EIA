@@ -34,24 +34,9 @@
                                                      id="{{ "wows1_"+i|string }}"/>
                                             </li>
                                         {% endfor %}
-                                        {#                                        <li><img src="/static/img/1.png" alt="2"#}
-                                        {#                                                 title="2" id="wows1_1"/></li>#}
-                                        {#                                        <li><a href="http://wowslider.com"><img src="/static/img/1.png"#}
-                                        {#                                                                                alt="jquery gallery" title="psb (1)"#}
-                                        {#                                                                                id="wows1_2"/></a></li>#}
-                                        {#                                        <li><img src="/static/img/1.png" alt="psb" title="psb" id="wows1_3"/></li>#}
                                     </ul>
                                 </div>
                                 <div class="ws_bullets">
-                                    {#                                    <div>#}
-                                    {#                                        <a href="#" title="1"><span><img src="/static/img/1.png"#}
-                                    {#                                                                         alt="LYZ_6641"/>1</span></a>#}
-                                    {#                                        <a href="#" title="2"><span><img src="/static/img/1.png"#}
-                                    {#                                                                         alt="OX~UJH8CIY}CZR((]8TIRDS"/>2</span></a>#}
-                                    {#                                        <a href="#" title="3"><span><img src="/static/img/1.png" alt="psb (1)"/>3</span></a>#}
-                                    {#                                        <a href="#" title="4"><span><img src="/static/img/1.png"#}
-                                    {#                                                                         alt="psb"/>4</span></a>#}
-                                    {#                                    </div>#}
                                 </div>
                                 <div class="ws_script" style="position:absolute;left:-99%"><a
                                         href="http://wowslider.com">slider js</a> by WOWSlider.com v8.1m
@@ -84,7 +69,11 @@
                             {% if bought==False %}
                                 <div class="add-to-cart-box">
                                     <br><br>
-                                    <input class="form-button" title="Buy" value="Buy" type="button">
+
+                                    <form action="{{ url_for('buy') }}" method="POST">
+                                        <input type="hidden" name="p_title" value="{{ p.title }}">
+                                        <input class="form-button" title="Buy" value="Buy" type="submit">
+                                    </form>
                                 </div>
                             {% else %}
                                 <div>You have bought it</div>

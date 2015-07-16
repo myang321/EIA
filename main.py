@@ -1,5 +1,7 @@
-from flask import Flask, render_template, redirect, request, session, url_for, g, flash
+from flask import Flask, render_template, redirect, request, session, url_for, g
+
 import database_setup as db
+
 
 app = Flask(__name__)
 app.debug = True
@@ -85,6 +87,7 @@ def search():
         list1 = db.search_by_category(g.db, c_func, c_ui)
     else:
         list1 = db.search_by_category(g.db, 'all', 'all')
+    print "list1", list1
     return render_template('search.html', list1=list1)
 
 
@@ -123,7 +126,7 @@ def product_detail():
 @app.route('/buy/', methods=['POST'])
 def buy():
     product_title = request.form['p_title']
-    db.buy_product(g.db, product_title, session['uid'])
+    db.create_order(g.db, product_title, session['uid'])
     return redirect(url_for('product_detail', title=product_title))
 
 
