@@ -136,8 +136,10 @@ def upload():
     c_ui = request.form['c_ui']
     new_product = db.Product(product_title, price, description, c_func, c_ui, session['uid'])
     pid = db.save_product(g.db, new_product)
-    file1 = request.files['img']
-    db.save_image(g.db, file1, pid)
+    file_list = request.files.getlist('img')
+    for f in file_list:
+        print "f name", f.filename
+        db.save_image(g.db, f, pid)
     return redirect(url_for('developer'))
 
 

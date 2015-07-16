@@ -3,6 +3,7 @@
 {% block head %}
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="/static/css/search.css">
+
 {% endblock %}
 
 {% block body %}
@@ -40,7 +41,8 @@
                         {% endfor %}
                     </select>
                     <br>
-                    Choose a file to upload: <input name="img" type="file"/><br/>
+
+                    <input type="file" multiple="" name="img" class="span3"/><br>
                     <input type="submit" value="Upload File"/>
                 </form>
             </div>
@@ -49,4 +51,5 @@
 {% endblock %}
 
 {% block script %}
+
 {% endblock %}

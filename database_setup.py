@@ -54,15 +54,15 @@ class Product(object):
             # for e in self.img_list:
             # print "in Product *************", e
             # # e = e.decode('string_escape')
-            #     e = e.replace('\\', '/')
-            #     print "in Product", e
-            #     print ""
+            # e = e.replace('\\', '/')
+            # print "in Product", e
+            # print ""
 
 
 def conn():
     if 'SERVER_SOFTWARE' in os.environ:
         # for SAE
-        from sae.const import (MYSQL_HOST, MYSQL_HOST_S, MYSQL_PORT, MYSQL_USER, MYSQL_PASS, MYSQL_DB)
+        from sae.const import (MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASS, MYSQL_DB)
 
         con1 = mdb.connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB, port=int(MYSQL_PORT))
     else:
@@ -225,6 +225,7 @@ def get_product_detail(con, title):
     sql = "SELECT * from {0} where title='{1}'".format(PRODUCTS_TABLE, title)
     result = execute_select_one(con, sql)
     product = relation_to_object_mapping_product(con, result)
+    print product.img_list
     return product
 
 
@@ -332,7 +333,8 @@ def execute_non_query(con, sql):
 
 def save_image(con, file1, pid):
     # filename = str(pid) + '_' + get_random_number_str() + '_' + file1.filename
-    filename = str(pid) + get_random_number_str() + '.png'
+    filename = str(pid) + get_random_number_str() + file1.filename
+    print "save image file1 name", file1.filename
     if 'SERVER_SOFTWARE' in os.environ:
         pass
     else:
