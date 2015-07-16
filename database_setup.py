@@ -6,13 +6,21 @@ except ImportError:
     import pymysql as mdb
 import os
 import re
+from random import randint
 
 DEVELOPERS_TABLE = "developers"
 BUYERS_TABLE = "buyers"
 PRODUCTS_TABLE = "products"
 ORDERS_TABLE = "orders"
+IMG_TABLE = "img"
+
 CATEGORY_FUNCTION = "category_function"
 CATEGORY_UI_STYLE = "category_ui_style"
+UPLOAD_FOLDER = 'static/upload'
+
+
+def get_random_number_str():
+    return str(randint(1111, 99999999))
 
 
 class User(object):
@@ -30,6 +38,25 @@ class Buyer(User):
 class Developer(User):
     def __init__(self, username, password, email):
         super(self.__class__, self).__init__(username, password, email)
+
+
+class Product(object):
+    def __init__(self, title, price, description, c_func, c_ui, dev_uid, img_list=None):
+        self.title = title
+        self.price = price
+        self.description = description
+        self.c_func = c_func
+        self.c_ui = c_ui
+        self.dev_uid = dev_uid
+        self.img_list = img_list
+        if self.img_list:
+            self.img_list = ['/' + str.replace('\\', '/') for str in self.img_list]
+            # for e in self.img_list:
+            # print "in Product *************", e
+            # # e = e.decode('string_escape')
+            #     e = e.replace('\\', '/')
+            #     print "in Product", e
+            #     print ""
 
 
 def conn():
@@ -121,7 +148,6 @@ def get_category_function_id(con, title):
     sql = "select cid from {0} where title='{1}'".format(CATEGORY_FUNCTION, title)
     cursor.execute(sql)
     result = cursor.fetchone()
-    print "in get_category_function_id ", title
     return result[0]
 
 
@@ -150,7 +176,6 @@ def get_category_ui_style_title(con, id):
 
 
 def search_by_category(con, c_func, c_ui):
-    cursor = con.cursor()
     if c_func == 'all' and c_ui == 'all':
         sql = "select * from {0}".format(PRODUCTS_TABLE)
     elif c_func != 'all':
@@ -161,13 +186,19 @@ def search_by_category(con, c_func, c_ui):
         sql = "select * from {0} where c_function={1} and c_ui_style={2}".format(PRODUCTS_TABLE,
                                                                                  get_category_function_id(con, c_func),
                                                                                  get_category_ui_style_id(con, c_ui))
-    cursor.execute(sql)
-    result = cursor.fetchall()
-    lists = [list(row) for row in result]
-    for row in lists:
-        row.append(get_category_function_title(con, row[6]))
-        row.append(get_category_ui_style_title(con, row[7]))
-    return lists
+    result = execute_select_all(con, sql)
+    list1 = []
+    for row in result:
+        product = relation_to_object_mapping_product(con, row)
+        list1.append(product)
+    return list1
+
+
+def relation_to_object_mapping_product(con, row):
+    pid = row[0]
+    product = Product(title=row[1], price=row[4], description=row[3], c_func=get_category_function_title(con, row[6]),
+                      c_ui=get_category_ui_style_title(con, row[7]), dev_uid=row[2], img_list=get_product_img(con, pid))
+    return product
 
 
 def get_category_function_list(con):
@@ -191,14 +222,10 @@ def get_category_ui_style_list(con):
 
 
 def get_product_detail(con, title):
-    cursor = con.cursor()
     sql = "SELECT * from {0} where title='{1}'".format(PRODUCTS_TABLE, title)
-    cursor.execute(sql)
-    result = cursor.fetchone()
-    list1 = list(result)
-    list1.append(get_category_function_title(con, result[6]))
-    list1.append(get_category_ui_style_title(con, result[7]))
-    return list1
+    result = execute_select_one(con, sql)
+    product = relation_to_object_mapping_product(con, result)
+    return product
 
 
 def get_product_id(con, title):
@@ -238,11 +265,9 @@ def has_bought(con, title, buyer_id):
 
 
 def get_buyer_orders(con, bid):
-    cursor = con.cursor()
     sql = "select p.*,o.date from {0}  as p, {1} as o where o.buyer_uid={2} and p.pid=o.pid".format(PRODUCTS_TABLE,
                                                                                                     ORDERS_TABLE, bid)
-    cursor.execute(sql)
-    result = cursor.fetchall()
+    result = execute_select_all(con, sql)
     lists = [list(row) for row in result]
     for row in lists:
         row.append(get_category_function_title(con, row[6]))
@@ -251,28 +276,78 @@ def get_buyer_orders(con, bid):
 
 
 def get_developers_products(con, dev_id):
-    cursor = con.cursor()
     sql = "select * from {0} where dev_uid={1}".format(PRODUCTS_TABLE, dev_id)
-    cursor.execute(sql)
-    result = cursor.fetchall()
-    lists = [list(row) for row in result]
-    for row in lists:
-        row.append(get_category_function_title(con, row[6]))
-        row.append(get_category_ui_style_title(con, row[7]))
-    return lists
+    result = execute_select_all(con, sql)
+    list1 = []
+    for row in result:
+        product = relation_to_object_mapping_product(con, row)
+        list1.append(product)
+    return list1
 
 
 def get_developer_orders(con, dev_id):
-    cursor = con.cursor()
     sql = "select * from {0} as p , {1} as o where p.dev_uid={2} and o.pid=p.pid".format(PRODUCTS_TABLE,
                                                                                          ORDERS_TABLE, dev_id)
+    result = execute_select_all(con, sql)
+    list1 = []
+    for row in result:
+        product = relation_to_object_mapping_product(con, row)
+        list1.append(product)
+    return list1
+
+
+def save_product(con, p):
+    sql = "insert into {0} (title,dev_uid,description,price,c_function,c_ui_style) values('{1}',{2},'{3}',{4},{5},{6})".format(
+        PRODUCTS_TABLE, p.title, p.dev_uid, p.description, p.price, get_category_function_id(con, p.c_func),
+        get_category_ui_style_id(con, p.c_ui))
+    execute_non_query(con, sql)
+    pid = get_product_id(con, p.title)
+    return pid
+
+
+def save_img_url(con, url, pid, is_front):
+    sql = "insert into {0} (url,pid,front) values('{1}',{2},{3})".format(IMG_TABLE, url, pid, is_front)
+    execute_non_query(con, sql)
+
+
+def execute_select_one(con, sql):
+    cursor = con.cursor()
+    cursor.execute(sql)
+    result = cursor.fetchone()
+    return result
+
+
+def execute_select_all(con, sql):
+    cursor = con.cursor()
     cursor.execute(sql)
     result = cursor.fetchall()
-    lists = [list(row) for row in result]
-    for row in lists:
-        row.append(get_category_function_title(con, row[6]))
-        row.append(get_category_ui_style_title(con, row[7]))
-    return lists
+    return result
+
+
+def execute_non_query(con, sql):
+    cursor = con.cursor()
+    cursor.execute(sql)
+    con.commit()
+
+
+def save_image(con, file1, pid):
+    # filename = str(pid) + '_' + get_random_number_str() + '_' + file1.filename
+    filename = str(pid) + get_random_number_str() + '.png'
+    if 'SERVER_SOFTWARE' in os.environ:
+        pass
+    else:
+        filename = os.path.join(UPLOAD_FOLDER, filename)
+        print filename
+        file1.save(filename)
+        filename = re.escape(filename)
+    save_img_url(con, filename, pid, 1)
+
+
+def get_product_img(con, pid):
+    sql = "select url from {0} where pid={1} order by front desc".format(IMG_TABLE, pid)
+    result = execute_select_all(con, sql)
+    list1 = [row[0] for row in result]
+    return list1
 
 
 if __name__ == "__main__":

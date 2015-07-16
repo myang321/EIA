@@ -83,10 +83,9 @@ def search():
         c_func = request.form['c_func']
         c_ui = request.form['c_ui']
         list1 = db.search_by_category(g.db, c_func, c_ui)
-        return render_template('search.html', list1=list1)
     else:
         list1 = db.search_by_category(g.db, 'all', 'all')
-        return render_template('search.html', list1=list1)
+    return render_template('search.html', list1=list1)
 
 
 @app.route('/logout/')
@@ -99,7 +98,9 @@ def logout():
 def developer():
     list1 = db.get_developers_products(g.db, session['uid'])
     list2 = db.get_developer_orders(g.db, session['uid'])
-    return render_template('developer.html', list1=list1, list2=list2)
+    c_func = db.get_category_function_list(g.db)
+    c_ui = db.get_category_ui_style_list(g.db)
+    return render_template('developer.html', list1=list1, list2=list2, c_func=c_func, c_ui=c_ui)
 
 
 @app.route('/buyer/')
@@ -111,12 +112,12 @@ def buyer():
 @app.route('/product_detail/')
 def product_detail():
     title = request.args.get('title')
-    list1 = db.get_product_detail(g.db, title)
+    product = db.get_product_detail(g.db, title)
     if session.get('uid') == None:
         bought = False
     else:
         bought = db.has_bought(g.db, title, session['uid'])
-    return render_template('product_detail.html', list1=list1, bought=bought)
+    return render_template('product_detail.html', p=product, bought=bought)
 
 
 @app.route('/buy/', methods=['POST'])
@@ -124,6 +125,20 @@ def buy():
     product_title = request.form['p_title']
     db.buy_product(g.db, product_title, session['uid'])
     return redirect(url_for('product_detail', title=product_title))
+
+
+@app.route('/upload/', methods=['POST'])
+def upload():
+    product_title = request.form['title']
+    price = request.form['price']
+    description = request.form['description']
+    c_func = request.form['c_func']
+    c_ui = request.form['c_ui']
+    new_product = db.Product(product_title, price, description, c_func, c_ui, session['uid'])
+    pid = db.save_product(g.db, new_product)
+    file1 = request.files['img']
+    db.save_image(g.db, file1, pid)
+    return redirect(url_for('developer'))
 
 
 if __name__ == '__main__':
