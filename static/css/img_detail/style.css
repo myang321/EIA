@@ -27,7 +27,7 @@
     height: 100%;
     max-width: 640px;
     max-height: 360px;
-    margin: 0px auto 0px;
+    margin: 0px auto 0px 0px;
     z-index: 90;
     text-align: left; /* reset align=center */
     font-size: 10px;

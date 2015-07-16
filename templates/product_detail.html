@@ -23,7 +23,8 @@
 
                         <div class="product-img-box">
                             <p class="product-image-zoom">
-				<--			<img src="{{ p.img_list[0] }}" alt="Item-PNG"></p>  -->
+                                {#                                <-- <img src="{{ p.img_list[0] }}" alt="Item-PNG"></p> -->#}
+
                             <div id="wowslider-container1">
                                 <div class="ws_images">
                                     <ul>
@@ -38,15 +39,15 @@
                                     </ul>
                                 </div>
                                 <div class="ws_bullets">
-                                    <div>
-                                        <a href="#" title="1"><span><img src="/static/img/1.png"
-                                                                         alt="LYZ_6641"/>1</span></a>
-                                        <a href="#" title="2"><span><img src="/static/img/1.png"
-                                                                         alt="OX~UJH8CIY}CZR((]8TIRDS"/>2</span></a>
-                                        <a href="#" title="3"><span><img src="/static/img/1.png" alt="psb (1)"/>3</span></a>
-                                        <a href="#" title="4"><span><img src="/static/img/1.png"
-                                                                         alt="psb"/>4</span></a>
-                                    </div>
+                                    {#                                    <div>#}
+                                    {#                                        <a href="#" title="1"><span><img src="/static/img/1.png"#}
+                                    {#                                                                         alt="LYZ_6641"/>1</span></a>#}
+                                    {#                                        <a href="#" title="2"><span><img src="/static/img/1.png"#}
+                                    {#                                                                         alt="OX~UJH8CIY}CZR((]8TIRDS"/>2</span></a>#}
+                                    {#                                        <a href="#" title="3"><span><img src="/static/img/1.png" alt="psb (1)"/>3</span></a>#}
+                                    {#                                        <a href="#" title="4"><span><img src="/static/img/1.png"#}
+                                    {#                                                                         alt="psb"/>4</span></a>#}
+                                    {#                                    </div>#}
                                 </div>
                                 <div class="ws_script" style="position:absolute;left:-99%"><a
                                         href="http://wowslider.com">slider js</a> by WOWSlider.com v8.1m
@@ -84,26 +85,29 @@
                             {% else %}
                                 <div>You have bought it</div>
                             {% endif %}
+
+                            <div class="product-collateral">
+                                <ul class="tab-block">
+                                    <li><a href="#pro-detail" title="Description" class="active">Description</a></li>
+                                </ul>
+                                <div id="pro-detail" class="pro-detail commonContent">
+                                    <ol>
+                                    </ol>
+                                    <p>
+                                        {{ p.description }}
+                                    </p>
+                                </div>
+
+                            </div>
+
+
                         </div>
 
 
                     </div>
                 </div>
 
-                <section class="product-collateral">
-                    <ul class="tab-block">
-                        <li><a href="#pro-detail" title="Description" class="active">Description</a></li>
-                    </ul>
-                    <div id="pro-detail" class="pro-detail commonContent">
-                        <ol>
-                        </ol>
-                        <p>
-                            {{ p.description }}
-                        </p>
-                    </div>
 
-
-                </section>
             </div>
             <div class="clearfix"></div>
         </div>

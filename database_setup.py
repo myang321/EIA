@@ -54,7 +54,7 @@ class Product(object):
             # for e in self.img_list:
             # print "in Product *************", e
             # # e = e.decode('string_escape')
-            #     e = e.replace('\\', '/')
+            # e = e.replace('\\', '/')
             #     print "in Product", e
             #     print ""
 

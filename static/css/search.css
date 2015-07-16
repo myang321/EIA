@@ -2072,12 +2072,12 @@ ul.form-list li input[type='checkbox'] {
 
 .main .product-info-box {
     float: left;
-    width: 840px;
+    width: 1000px;
 }
 
 .main .product-info-box .product-img-box {
     float: left;
-    width: 402px;
+    width: 500px;
     text-align: center;
 }
 
@@ -2092,6 +2092,12 @@ ul.form-list li input[type='checkbox'] {
     margin: 0px 0px 10px;
     padding: 0px;
 }
+
+.product-img-box {
+    margin-bottom: 30px;
+    height: 400px;
+}
+
 
 .main .product-info-box .product-img-box .product-image-zoom img {
     display: inline-block;
@@ -2382,7 +2388,7 @@ ul.form-list li input[type='checkbox'] {
 
 .main .product-collateral {
     float: left;
-    width: 100%;
+    width: 500px;
     clear: both;
     padding: 55px 0px 40px;
 }
