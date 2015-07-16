@@ -349,6 +349,9 @@ def save_image(con, file1, pid):
     else:
         url = filename
         file_full_path = os.path.join(UPLOAD_FOLDER, filename)
+        if os.environ['USER'] == 'lily':
+            file_full_path = "/Users/Lily/PycharmProjects/EIA/static/upload/" + filename
+        print file_full_path
         file1.save(file_full_path)
     save_img_url(con, url, pid, 1)
 
