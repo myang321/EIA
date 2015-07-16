@@ -3,6 +3,7 @@
 {% block head %}
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="/static/css/search.css">
+
 {% endblock %}
 
 {% block body %}
@@ -14,10 +15,18 @@
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="tab1">
-                {% include 'search_grid.html' %}
+                {% if list1|length==0 %}
+                    <div>Your havn't upload any product.</div>
+                {% else %}
+                    {% include 'search_grid.html' %}
+                {% endif %}
             </div>
             <div class="tab-pane" id="tab2">
-                {% include 'search_grid2.html' %}
+                {% if list2|length==0 %}
+                    <div>You haven't sold any product yet.</div>
+                {% else %}
+                    {% include 'search_grid2.html' %}
+                {% endif %}
             </div>
             <div class="tab-pane" id="tab3">
                 <form enctype="multipart/form-data" action="{{ url_for('upload') }}"
@@ -40,7 +49,8 @@
                         {% endfor %}
                     </select>
                     <br>
-                    Choose a file to upload: <input name="img" type="file"/><br/>
+
+                    <input type="file" multiple="" name="img" class="span3"/><br>
                     <input type="submit" value="Upload File"/>
                 </form>
             </div>
@@ -49,4 +59,5 @@
 {% endblock %}
 
 {% block script %}
+
 {% endblock %}

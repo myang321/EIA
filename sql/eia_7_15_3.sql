@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50403
 File Encoding         : 65001
 
-Date: 2015-07-15 16:30:23
+Date: 2015-07-15 21:40:25
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -25,7 +25,7 @@ CREATE TABLE `buyers` (
   `email` varchar(100) NOT NULL,
   PRIMARY KEY (`uid`),
   UNIQUE KEY `buyers_k2` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of buyers
@@ -33,6 +33,7 @@ CREATE TABLE `buyers` (
 INSERT INTO `buyers` VALUES ('1', 'lily', '123', 'lily@asu.edu');
 INSERT INTO `buyers` VALUES ('2', 'steve', '123', 'sdfsad@asu.edu');
 INSERT INTO `buyers` VALUES ('4', 'steve2', '123', 'sdfsa2d@asu.edu');
+INSERT INTO `buyers` VALUES ('5', 'lily2', '123', 'lily2@asu.edu');
 
 -- ----------------------------
 -- Table structure for `category_function`
@@ -43,7 +44,7 @@ CREATE TABLE `category_function` (
   `title` varchar(200) NOT NULL,
   `description` varchar(2000) DEFAULT NULL,
   PRIMARY KEY (`cid`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of category_function
@@ -62,7 +63,7 @@ CREATE TABLE `category_ui_style` (
   `title` varchar(200) NOT NULL,
   `description` varchar(2000) DEFAULT NULL,
   PRIMARY KEY (`cid`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of category_ui_style
@@ -81,12 +82,13 @@ CREATE TABLE `developers` (
   `email` varchar(100) NOT NULL,
   PRIMARY KEY (`uid`),
   UNIQUE KEY `developers_k2` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of developers
 -- ----------------------------
 INSERT INTO `developers` VALUES ('1', 'dev1', '123', 'dev1@gmail.com');
+INSERT INTO `developers` VALUES ('2', 'dev2', '123', 'dev2@asu.edu');
 
 -- ----------------------------
 -- Table structure for `img`
@@ -98,12 +100,28 @@ CREATE TABLE `img` (
   `pid` int(11) NOT NULL,
   `front` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of img
 -- ----------------------------
 INSERT INTO `img` VALUES ('11', 'static/upload\\2861282448.png', '28', '1');
+INSERT INTO `img` VALUES ('12', 'static/upload\\2861282448.png', '28', '0');
+INSERT INTO `img` VALUES ('13', 'static/upload\\2965213729.png', '29', '1');
+INSERT INTO `img` VALUES ('14', 'static/upload\\3063030450', '30', '1');
+INSERT INTO `img` VALUES ('15', 'static/upload\\3163382375', '31', '1');
+INSERT INTO `img` VALUES ('16', 'static/upload\\3281615953123.jpg', '32', '1');
+INSERT INTO `img` VALUES ('17', 'static/upload\\33186321051.png', '33', '1');
+INSERT INTO `img` VALUES ('18', 'static/upload\\2861282448.png', '1', '0');
+INSERT INTO `img` VALUES ('19', 'static/upload\\2861282448.png', '2', '0');
+INSERT INTO `img` VALUES ('20', 'static/upload\\2861282448.png', '7', '0');
+INSERT INTO `img` VALUES ('21', 'static/upload\\354068439', '35', '1');
+INSERT INTO `img` VALUES ('22', 'static/upload\\3695684534123.jpg', '36', '1');
+INSERT INTO `img` VALUES ('23', 'static/upload\\366921661aaa.jpg', '36', '1');
+INSERT INTO `img` VALUES ('24', 'http://applatform-domain1.stor.sinaapp.com/3724915482logo.png', '37', '1');
+INSERT INTO `img` VALUES ('25', 'http://applatform-domain1.stor.sinaapp.com/3789867408skype.png', '37', '1');
+INSERT INTO `img` VALUES ('26', 'http://applatform-domain1.stor.sinaapp.com/3831154460logo.png', '38', '1');
+INSERT INTO `img` VALUES ('27', 'http://applatform-domain1.stor.sinaapp.com/3865586991skype.png', '38', '1');
 
 -- ----------------------------
 -- Table structure for `orders`
@@ -113,15 +131,17 @@ CREATE TABLE `orders` (
   `oid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `pid` int(11) NOT NULL,
   `buyer_uid` int(11) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
-  `price` double(15,2) NOT NULL,
+  `date` timestamp NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  `price` double(15,2) DEFAULT NULL,
   PRIMARY KEY (`oid`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of orders
 -- ----------------------------
 INSERT INTO `orders` VALUES ('1', '1', '1', '2015-07-14 20:04:40', '99.99');
+INSERT INTO `orders` VALUES ('2', '2', '1', '0000-00-00 00:00:00', null);
+INSERT INTO `orders` VALUES ('3', '37', '5', '0000-00-00 00:00:00', null);
 
 -- ----------------------------
 -- Table structure for `products`
@@ -138,15 +158,10 @@ CREATE TABLE `products` (
   `c_ui_style` int(11) DEFAULT NULL,
   PRIMARY KEY (`pid`),
   UNIQUE KEY `products_k1` (`title`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of products
 -- ----------------------------
-INSERT INTO `products` VALUES ('1', 'airbnb', '1', 'Rent unique accommodations from local hosts in 190+ countries. Feel at home anywhere you go in the world with Airbnb.', '99.99', '', '4', '1');
-INSERT INTO `products` VALUES ('2', 'uno', '1', 'Uno (/ˈuːnoʊ/; from Italian and Spanish for \'one\') is an American card game which is played with a specially printed deck (see Mau Mau for an almost identical game played with normal playing cards). ', '19.99', '', '3', '2');
-INSERT INTO `products` VALUES ('4', 'uno2', '1', 'Uno (/ˈuːnoʊ/; from Italian and Spanish for \'one\') is an American card game which is played with a specially printed deck (see Mau Mau for an almost identical game played with normal playing cards). ', '29.99', '', '4', '2');
-INSERT INTO `products` VALUES ('5', 'uno3', '1', 'Uno (/ˈuːnoʊ/; from Italian and Spanish for \'one\') is an American card game which is played with a specially printed deck (see Mau Mau for an almost identical game played with normal playing cards). ', '39.99', '', '4', '1');
-INSERT INTO `products` VALUES ('6', 'uno4', '1', 'Uno (/ˈuːnoʊ/; from Italian and Spanish for \'one\') is an American card game which is played with a specially printed deck (see Mau Mau for an almost identical game played with normal playing cards). ', '49.88', '', '4', '1');
-INSERT INTO `products` VALUES ('7', 'weibo', '1', 'Sina Weibo (NASDAQ: WB) is a Chinese microblogging (weibo) website.', '199.00', '', '1', '1');
-INSERT INTO `products` VALUES ('28', 'app1', '1', 'sdcsd', '999.00', '', '1', '1');
+INSERT INTO `products` VALUES ('37', 'dev2_app1', '2', 'asvdadsvsadvsadvdvdsvds', '999.00', '', '1', '1');
+INSERT INTO `products` VALUES ('38', 'app999', '2', 'csdc', '999.00', '', '2', '1');
