@@ -177,5 +177,28 @@ def delete_product():
     return render_template('developer.html')
 
 
+@app.route('/admin/category', methods=['GET'])
+def admin_category():
+    c_func = db.get_category_function_list(g.db)
+    c_ui = db.get_category_ui_style_list(g.db)
+    return render_template('admin_category.html', c_func=c_func, c_ui=c_ui)
+
+
+@app.route('/admin/add_category_item', methods=['POST'])
+def admin_add_category_item():
+    type = request.form['type']
+    title = request.form['title']
+    db.add_category_item(g.db, title, type)
+    return redirect(url_for('admin_category'))
+
+
+@app.route('/admin/delete_category_item', methods=['POST'])
+def admin_delete_category_item():
+    type = request.form['type']
+    title = request.form['title']
+    db.delete_category_item(g.db, title, type)
+    return redirect(url_for('admin_category'))
+
+
 if __name__ == '__main__':
     app.run()

@@ -20,9 +20,9 @@
                 <option value="all">Select your function</option>
                 {% for i in c_func %}
                     {% if i==p.c_func %}
-                        <option value="{{ i }}" selected="selected">{{ i }}</option>
+                        <option value="{{ i.title }}" selected="selected">{{ i.title }}</option>
                     {% else %}
-                        <option value="{{ i }}">{{ i }}</option>
+                        <option value="{{ i.title }}">{{ i.title }}</option>
                     {% endif %}
                 {% endfor %}
             </select>
@@ -33,9 +33,9 @@
                 <option value="all">Select your UI style</option>
                 {% for i in c_ui %}
                     {% if i==p.c_ui %}
-                        <option value="{{ i }}" selected="selected">{{ i }}</option>
+                        <option value="{{ i.title }}" selected="selected">{{ i.title }}</option>
                     {% else %}
-                        <option value="{{ i }}">{{ i }}</option>
+                        <option value="{{ i.title }}">{{ i.title }}</option>
                     {% endif %}
                 {% endfor %}
             </select>

@@ -20,13 +20,13 @@
             <select name="c_func">
                 <option value="all">Select your function</option>
                 {% for i in c_func %}
-                    <option value="{{ i }}">{{ i }}</option>
+                    <option value="{{ i.title }}">{{ i.title }}</option>
                 {% endfor %}
             </select>
             <select name="c_ui">
                 <option value="all">Select your UI style</option>
                 {% for i in c_ui %}
-                    <option value="{{ i }}">{{ i }}</option>
+                    <option value="{{ i.title }}">{{ i.title }}</option>
                 {% endfor %}
             </select>
             <input id="searchButton" type="submit" value="Go!"/>

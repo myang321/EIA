@@ -1,0 +1,48 @@
+{% extends "base2.html" %}
+
+
+{% block body %}
+    <div>
+        <h2>Function</h2>
+
+        <form class="form" method="post" action={{ url_for("admin_add_category_item") }}>
+            <input type="hidden" name="type" value="c_func">
+            <input type="text" name="title">
+            <input type="submit" value="Add">
+        </form>
+        <div>
+            {% for i in c_func %}
+                <div>
+                    <form class="form" method="post" action={{ url_for("admin_delete_category_item") }}>
+                        <input type="hidden" name="type" value="c_func">
+                        <input type="hidden" name="title" value="{{ i.title }}">
+                        <span>title:{{ i.title }}</span>
+                        <input type="submit" value="Delete">
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div>
+        <h2>UI Style</h2>
+
+        <form class="form" method="post" action={{ url_for("admin_add_category_item") }}>
+            <input type="hidden" name="type" value="c_ui">
+            <input type="text" name="title">
+            <input type="submit" value="Add">
+        </form>
+        <div>
+            {% for i in c_ui %}
+                <div>
+                    <form class="form" method="post" action={{ url_for("admin_delete_category_item") }}>
+                        <input type="hidden" name="type" value="c_ui">
+                        <input type="hidden" name="title" value="{{ i.title }}">
+                        <span>title:{{ i.title }}</span>
+                        <input type="submit" value="Delete">
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
