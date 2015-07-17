@@ -28,7 +28,8 @@
                                     <ul>
                                         {% for i in range(p.img_list|length) %}
                                             <li>
-                                                <img src="{{ p.img_list[i] }}" alt="{{ i }}" title="{{ i }}"
+                                                <img class="image-size" src="{{ p.img_list[i] }}" alt="{{ i }}"
+                                                     title="{{ i }}"
                                                      id="{{ "wows1_"+i|string }}"/>
                                             </li>
                                         {% endfor %}
@@ -53,15 +54,15 @@
                             <br>
 
                             <div class="add-to-cart-box">
-							<span class="qty-box">
-								<br><br>
-								<label for="qty">Qty:</label>
-								<a href="javascript:void(0)" title="" class="prev add"><img
-                                        src="/static/img/qty_prev.png" title="" alt="add">‹</a>
-								<input type="text" value="1" maxlength="12" id="qty" class="input-text qty" name="qty">
-								<a href="javascript:void(0)" title="" class="next dec add"><img
-                                        src="/static/img/qty_next.png" title="" alt="">›</a>
-							</span>
+                                {#							<span class="qty-box">#}
+                                {#								<br><br>#}
+                                {#								<label for="qty">Qty:</label>#}
+                                {#								<a href="javascript:void(0)" title="" class="prev add"><img#}
+                                {#                                        src="/static/img/qty_prev.png" title="" alt="add">‹</a>#}
+                                {#								<input type="text" value="1" maxlength="12" id="qty" class="input-text qty" name="qty">#}
+                                {#								<a href="javascript:void(0)" title="" class="next dec add"><img#}
+                                {#                                        src="/static/img/qty_next.png" title="" alt="">›</a>#}
+                                {#							</span>#}
 
                             </div>
                             {% if bought==False %}

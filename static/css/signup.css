@@ -28,7 +28,7 @@ form {
     width: 300px;
 }
 
-.form-item input {
+.form-item input, #description {
     border: 1px solid #ccc;
     border-radius: 2px;
     color: #000;
@@ -38,6 +38,8 @@ form {
     padding: 0 16px;
     transition: background 0.3s ease-in-out;
     width: 300px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
 }
 
 .form-item input:focus {
@@ -74,5 +76,11 @@ form {
     /*padding: 5px;*/
     /*padding: 30px 20px 0;*/
 
+}
 
+#submit {
+    background: #009dff;
+    color: #fff;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.2em;
 }

@@ -1,34 +1,49 @@
-<form enctype="multipart/form-data" action="{{ url_for('upload_product') }}"
+<form name="form" enctype="multipart/form-data" action="{{ url_for('upload_product') }}"
       method="POST">
-    <input type="hidden" name="old_title" value="{{ p.title }}"/>
-    <input type="hidden" name="is_new" value="{{ is_new }}"/>
-    <input type="hidden" name="MAX_FILE_SIZE" value="100000"/>
-    <input type="text" name="title" placeholder="title" value="{{ p.title }}"><br>
-    <input type="text" name="price" placeholder="price" value="{{ p.price }}"><br>
-    <textarea id="description" name="description" placeholder="description">{{ p.description }}</textarea><br>
-    <select name="c_func">
-        <option value="all">Select your function</option>
-        {% for i in c_func %}
-            {% if i==p.c_func %}
-                <option value="{{ i }}" selected="selected">{{ i }}</option>
-            {% else %}
-                <option value="{{ i }}">{{ i }}</option>
-            {% endif %}
-        {% endfor %}
-    </select>
-    <br>
-    <select name="c_ui">
-        <option value="all">Select your UI style</option>
-        {% for i in c_ui %}
-            {% if i==p.c_ui %}
-                <option value="{{ i }}" selected="selected">{{ i }}</option>
-            {% else %}
-                <option value="{{ i }}">{{ i }}</option>
-            {% endif %}
-        {% endfor %}
-    </select>
-    <br>
-
-    <input type="file" multiple="" name="img" class="span3"/><br>
-    <input type="submit" value="Submit"/>
+    <div class="form">
+        <div class="form-item">
+            <input type="hidden" name="old_title" value="{{ p.title }}"/>
+        </div>
+        <div class="form-item">
+            <input type="hidden" name="is_new" value="{{ is_new }}"/></div>
+        <div class="form-item">
+            <input type="hidden" name="MAX_FILE_SIZE" value="100000"/></div>
+        <div class="form-item">
+            <input type="text" name="title" placeholder="title" value="{{ p.title }}"><br></div>
+        <div class="form-item">
+            <input type="text" name="price" placeholder="price" value="{{ p.price }}"><br></div>
+        <div class="form-item">
+            <textarea id="description" name="description" placeholder="description">{{ p.description }}</textarea><br>
+        </div>
+        <div class="form-item">
+            <select name="c_func">
+                <option value="all">Select your function</option>
+                {% for i in c_func %}
+                    {% if i==p.c_func %}
+                        <option value="{{ i }}" selected="selected">{{ i }}</option>
+                    {% else %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <br>
+        </div>
+        <div class="form-item">
+            <select name="c_ui">
+                <option value="all">Select your UI style</option>
+                {% for i in c_ui %}
+                    {% if i==p.c_ui %}
+                        <option value="{{ i }}" selected="selected">{{ i }}</option>
+                    {% else %}
+                        <option value="{{ i }}">{{ i }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <br>
+        </div>
+        <div class="form-item">
+            <input type="file" multiple="" name="img" class="span3"/><br></div>
+        <div class="form-item">
+            <input id="submit" type="submit" value="Submit"/></div>
+    </div>
 </form>
