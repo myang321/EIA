@@ -1,3 +1,8 @@
+import sys
+
+reload(sys)
+sys.setdefaultencoding("utf-8")
+
 __author__ = 'Steve'
 
 try:
@@ -46,7 +51,7 @@ class Product(object):
     def __init__(self, title='', price='', description='', c_func='', c_ui='', dev_uid='', img_list=None, pid=None):
         self.title = title
         self.price = price
-        self.description = description
+        self.description = re.escape(description)
         self.c_func = c_func
         self.c_ui = c_ui
         self.dev_uid = dev_uid
@@ -56,7 +61,14 @@ class Product(object):
             if 'SERVER_SOFTWARE' not in os.environ:
                 self.img_list = ['/' + UPLOAD_FOLDER + str for str in self.img_list]
         if self.img_list == None or len(self.img_list) == 0:
-            self.img_list = ['/static/img/no_image.png']
+            self.img_list = ['/static/img/no_image2.png']
+
+    def get_description(self):
+        print self.description
+        str = self.description.decode('string_escape')
+        str = str.replace('\\', '')
+        print str
+        return str
 
 
 class SendEmailThread(Thread):
@@ -102,7 +114,8 @@ def conn():
 
         print "connecting local mysql"
 
-        con1 = mdb.connect(host=LOCAL_HOST, user=LOCAL_USERNAME, passwd=LOCAL_PASSWD, db=LOCAL_DB_NAME, port=LOCAL_PORT)
+        con1 = mdb.connect(host=LOCAL_HOST, user=LOCAL_USERNAME, passwd=LOCAL_PASSWD, db=LOCAL_DB_NAME,
+                           port=LOCAL_PORT, charset='utf8')
     return con1
 
 
