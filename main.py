@@ -151,7 +151,8 @@ def upload_product():
         pid = db.update_product(g.db, product, old_title)
     file_list = request.files.getlist('img')
     for f in file_list:
-        print "f name", f.filename
+        if f.filename == '':
+            continue
         db.save_image(g.db, f, pid)
     return redirect(url_for('developer'))
 

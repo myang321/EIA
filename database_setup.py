@@ -7,6 +7,8 @@ except ImportError:
 import os
 import re
 from random import randint
+import smtplib
+from threading import Thread
 
 DEVELOPERS_TABLE = "developers"
 BUYERS_TABLE = "buyers"
@@ -24,24 +26,24 @@ def get_random_number_str():
 
 
 class User(object):
-    def __init__(self, username, password, email):
+    def __init__(self, username, password, email, uid):
         self.username = username
         self.password = password
         self.email = email
 
 
 class Buyer(User):
-    def __init__(self, username, password, email):
-        super(self.__class__, self).__init__(username, password, email)
+    def __init__(self, username=None, password=None, email=None, uid=None):
+        super(self.__class__, self).__init__(username, password, email, uid)
 
 
 class Developer(User):
-    def __init__(self, username, password, email):
-        super(self.__class__, self).__init__(username, password, email)
+    def __init__(self, username=None, password=None, email=None, uid=None):
+        super(self.__class__, self).__init__(username, password, email, uid)
 
 
 class Product(object):
-    def __init__(self, title='', price='', description='', c_func='', c_ui='', dev_uid='', img_list=None):
+    def __init__(self, title='', price='', description='', c_func='', c_ui='', dev_uid='', img_list=None, pid=None):
         self.title = title
         self.price = price
         self.description = description
@@ -49,9 +51,43 @@ class Product(object):
         self.c_ui = c_ui
         self.dev_uid = dev_uid
         self.img_list = img_list
+        self.pid = pid
         if self.img_list:
             if 'SERVER_SOFTWARE' not in os.environ:
                 self.img_list = ['/' + UPLOAD_FOLDER + str for str in self.img_list]
+        if self.img_list == None or len(self.img_list) == 0:
+            self.img_list = ['/static/img/no_image.png']
+
+
+class SendEmailThread(Thread):
+    def __init__(self, to_addrs, buyer, product_title):
+        Thread.__init__(self)
+        self.to_addrs = to_addrs
+        self.buyer = buyer
+        self.product_title = product_title
+
+    def run(self):
+        buyer = self.buyer
+        product_title = self.product_title
+        to_addrs = self.to_addrs
+        # Credentials (if needed)
+        username = 'applatform.service@gmail.com'
+        password = 'eiawestart'
+        from_addr = username
+        subject = 'Order Notification'
+        url = 'http://applatform.sinaapp.com/'
+        content = "{0} has bought your product: {1}\nThis is {0}'s email: {2}\n\n{3}".format(buyer.username,
+                                                                                             product_title,
+                                                                                             buyer.email, url)
+        message = '\From: {0}\nTo: {1}\nSubject: {2}\n\n{3}'.format(username, ", ".join([to_addrs]), subject, content)
+
+        # The actual mail send
+        server = smtplib.SMTP('smtp.gmail.com:587')
+        server.ehlo()
+        server.starttls()
+        server.login(username, password)
+        server.sendmail(from_addr, to_addrs, message)
+        server.close()
 
 
 def conn():
@@ -71,48 +107,38 @@ def conn():
 
 
 def developers_authentication(con, username, password):
-    cursor = con.cursor()
     es_username = re.escape(username)
     sql = "select uid,username from {0} where username='{1}' and password='{2}' ".format(DEVELOPERS_TABLE,
                                                                                          es_username,
                                                                                          password)
-    cursor.execute(sql)
-    result = cursor.fetchone()
+    result = execute_select_one(con, sql)
     return result
 
 
 def buyers_authentication(con, username, password):
-    cursor = con.cursor()
     es_username = re.escape(username)
     sql = "select uid,username from {0} where username='{1}' and password='{2}' ".format(BUYERS_TABLE,
                                                                                          es_username,
                                                                                          password)
-    cursor.execute(sql)
-    result = cursor.fetchone()
+    result = execute_select_one(con, sql)
     return result
 
 
 def add_buyer(con, buyer):
-    cursor = con.cursor()
     sql = "insert into {0} (username,password,email) values('{1}','{2}','{3}')".format(BUYERS_TABLE, buyer.username,
                                                                                        buyer.password, buyer.email)
-    cursor.execute(sql)
-    con.commit()
+    execute_non_query(con, sql)
 
 
 def add_developer(con, dev):
-    cursor = con.cursor()
     sql = "insert into {0} (username,password,email) values('{1}','{2}','{3}')".format(DEVELOPERS_TABLE, dev.username,
                                                                                        dev.password, dev.email)
-    cursor.execute(sql)
-    con.commit()
+    execute_non_query(con, sql)
 
 
 def is_buyer_email_exist(con, email):
-    cursor = con.cursor()
     sql = "select * from {0} where email='{1}'".format(BUYERS_TABLE, email)
-    cursor.execute(sql)
-    result = cursor.fetchone()
+    result = execute_select_one(con, sql)
     if result == None:
         return False
     else:
@@ -120,10 +146,8 @@ def is_buyer_email_exist(con, email):
 
 
 def is_dev_email_exist(con, email):
-    cursor = con.cursor()
     sql = "select * from developers where email='{0}'".format(email)
-    cursor.execute(sql)
-    result = cursor.fetchone()
+    result = execute_select_one(con, sql)
     if result == None:
         return False
     else:
@@ -139,35 +163,26 @@ def is_email_exist(con, email, type):
 
 
 def get_category_function_id(con, title):
-    cursor = con.cursor()
     sql = "select cid from {0} where title='{1}'".format(CATEGORY_FUNCTION, title)
-    cursor.execute(sql)
-    result = cursor.fetchone()
+    result = execute_select_one(con, sql)
     return result[0]
 
 
 def get_category_function_title(con, id):
-    cursor = con.cursor()
     sql = "select title from {0} where cid={1}".format(CATEGORY_FUNCTION, id)
-    cursor.execute(sql)
-    result = cursor.fetchone()
+    result = execute_select_one(con, sql)
     return result[0]
 
 
 def get_category_ui_style_id(con, title):
-    cursor = con.cursor()
     sql = "select cid from {0} where title='{1}'".format(CATEGORY_UI_STYLE, title)
-    cursor.execute(sql)
-    result = cursor.fetchone()
+    result = execute_select_one(con, sql)
     return result[0]
 
 
 def get_category_ui_style_title(con, id):
-    cursor = con.cursor()
     sql = "select title from {0} where cid={1}".format(CATEGORY_UI_STYLE, id)
-    print sql
-    cursor.execute(sql)
-    result = cursor.fetchone()
+    result = execute_select_one(con, sql)
     return result[0]
 
 
@@ -182,7 +197,6 @@ def search_by_category(con, c_func, c_ui):
         sql = "select * from {0} where c_function={1} and c_ui_style={2}".format(PRODUCTS_TABLE,
                                                                                  get_category_function_id(con, c_func),
                                                                                  get_category_ui_style_id(con, c_ui))
-    print sql
     result = execute_select_all(con, sql)
     list1 = []
     for row in result:
@@ -194,25 +208,32 @@ def search_by_category(con, c_func, c_ui):
 def relation_to_object_mapping_product(con, row):
     pid = row[0]
     product = Product(title=row[1], price=row[4], description=row[3], c_func=get_category_function_title(con, row[6]),
-                      c_ui=get_category_ui_style_title(con, row[7]), dev_uid=row[2], img_list=get_product_img(con, pid))
+                      c_ui=get_category_ui_style_title(con, row[7]), dev_uid=row[2], img_list=get_product_img(con, pid),
+                      pid=pid)
     return product
 
 
+def relation_to_object_mapping_developer(con, row):
+    dev = Developer(uid=row[0], username=row[1], email=row[3])
+    return dev
+
+
+def relation_to_object_mapping_buyer(con, row):
+    buyer = Buyer(uid=row[0], username=row[1], email=row[3])
+    return buyer
+
+
 def get_category_function_list(con):
-    cursor = con.cursor()
     sql = "SELECT title from {0}".format(CATEGORY_FUNCTION)
-    cursor.execute(sql)
-    result = cursor.fetchall()
+    result = execute_select_all(con, sql)
     # convert to list
     list1 = [row[0] for row in result]
     return list1
 
 
 def get_category_ui_style_list(con):
-    cursor = con.cursor()
     sql = "SELECT title from {0}".format(CATEGORY_UI_STYLE)
-    cursor.execute(sql)
-    result = cursor.fetchall()
+    result = execute_select_all(con, sql)
     # convert to list
     list1 = [row[0] for row in result]
     return list1
@@ -222,16 +243,29 @@ def get_product_detail(con, title):
     sql = "SELECT * from {0} where title='{1}'".format(PRODUCTS_TABLE, title)
     result = execute_select_one(con, sql)
     product = relation_to_object_mapping_product(con, result)
-    print product.img_list
     return product
 
 
-def get_product_id(con, title):
-    cursor = con.cursor()
-    sql = "SELECT pid from {0} where title='{1}'".format(PRODUCTS_TABLE, title)
-    cursor.execute(sql)
-    result = cursor.fetchone()
-    return result[0]
+def get_buyer(con, uid):
+    sql = "SELECT * from {0} where uid='{1}'".format(BUYERS_TABLE, uid)
+    result = execute_select_one(con, sql)
+    buyer = relation_to_object_mapping_buyer(con, result)
+    return buyer
+
+
+def get_developer(con, uid):
+    sql = "SELECT * from {0} where uid='{1}'".format(DEVELOPERS_TABLE, uid)
+    result = execute_select_one(con, sql)
+    buyer = relation_to_object_mapping_developer(con, result)
+    return buyer
+
+
+# def get_product_id(con, title):
+# cursor = con.cursor()
+# sql = "SELECT pid from {0} where title='{1}'".format(PRODUCTS_TABLE, title)
+# cursor.execute(sql)
+# result = cursor.fetchone()
+# return result[0]
 
 
 # def get_buyer_id(con, name):
@@ -242,18 +276,20 @@ def get_product_id(con, title):
 # return result[0]
 
 def create_order(con, title, buyer_id):
-    pid = get_product_id(con, title)
-    sql = "insert into {0} (pid,buyer_uid) values({1},{2})".format(ORDERS_TABLE, pid, buyer_id)
+    p = get_product_detail(con, title)
+    sql = "insert into {0} (pid,buyer_uid) values({1},{2})".format(ORDERS_TABLE, p.pid, buyer_id)
     execute_non_query(con, sql)
+    buyer = get_buyer(con, buyer_id)
+    developer = get_developer(con, p.dev_uid)
+    send_mail(developer.email, buyer, p.title)
 
 
 def has_bought(con, title, buyer_id):
     cursor = con.cursor()
-    pid = get_product_id(con, title)
-    sql = "select * from {0} where pid={1} and buyer_uid={2}".format(ORDERS_TABLE, pid, buyer_id)
+    p = get_product_detail(con, title)
+    sql = "select * from {0} where pid={1} and buyer_uid={2}".format(ORDERS_TABLE, p.pid, buyer_id)
     cursor.execute(sql)
     result = cursor.fetchone()
-    print result
     if result != None:
         return True
     else:
@@ -297,8 +333,8 @@ def save_product(con, p):
         PRODUCTS_TABLE, p.title, p.dev_uid, p.description, p.price, get_category_function_id(con, p.c_func),
         get_category_ui_style_id(con, p.c_ui))
     execute_non_query(con, sql)
-    pid = get_product_id(con, p.title)
-    return pid
+    p = get_product_detail(con, p.title)
+    return p.pid
 
 
 def update_product(con, p, old_title):
@@ -306,8 +342,8 @@ def update_product(con, p, old_title):
         PRODUCTS_TABLE, p.title, p.price, p.description, get_category_function_id(con, p.c_func),
         get_category_ui_style_id(con, p.c_ui), old_title)
     execute_non_query(con, sql)
-    pid = get_product_id(con, p.title)
-    return pid
+    p = get_product_detail(con, p.title)
+    return p.pid
 
 
 def save_img_url(con, url, pid, is_front):
@@ -339,7 +375,6 @@ def save_image(con, file1, pid):
     # filename = str(pid) + '_' + get_random_number_str() + '_' + file1.filename
     ext = file1.filename.split('.')[-1]
     filename = str(pid) + get_random_number_str() + '.' + ext
-    print "save image file1 name", file1.filename
     if 'SERVER_SOFTWARE' in os.environ:
         from sae.storage import Bucket
 
@@ -349,9 +384,8 @@ def save_image(con, file1, pid):
     else:
         url = filename
         file_full_path = os.path.join(UPLOAD_FOLDER, filename)
-        if os.environ['USER'] == 'Lily':
+        if os.environ.get('USER') == 'Lily':
             file_full_path = "/Users/Lily/PycharmProjects/EIA/static/upload/" + filename
-        print file_full_path
         file1.save(file_full_path)
     save_img_url(con, url, pid, 1)
 
@@ -366,6 +400,11 @@ def get_product_img(con, pid):
 def delete_product(con, p_title):
     sql = "delete from {0} where title='{1}'".format(PRODUCTS_TABLE, p_title)
     execute_non_query(con, sql)
+
+
+def send_mail(to_addrs, buyer, product_title):
+    thread1 = SendEmailThread(to_addrs, buyer, product_title)
+    thread1.start()
 
 
 if __name__ == "__main__":
