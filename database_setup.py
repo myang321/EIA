@@ -55,6 +55,8 @@ class Product(object):
         if self.img_list:
             if 'SERVER_SOFTWARE' not in os.environ:
                 self.img_list = ['/' + UPLOAD_FOLDER + str for str in self.img_list]
+        if self.img_list == None or len(self.img_list) == 0:
+            self.img_list = ['/static/img/no_image.png']
 
 
 class SendEmailThread(Thread):
