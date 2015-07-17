@@ -179,6 +179,10 @@ def delete_product():
 
 @app.route('/admin/category', methods=['GET'])
 def admin_category():
+    print session.get('admin'), session.get('admin') != 1
+    if session.get('admin') != 1:
+        print "redirect(url_for('admin_auth'))"
+        return redirect(url_for('admin_auth'))
     c_func = db.get_category_function_list(g.db)
     c_ui = db.get_category_ui_style_list(g.db)
     return render_template('admin_category.html', c_func=c_func, c_ui=c_ui)
@@ -186,6 +190,8 @@ def admin_category():
 
 @app.route('/admin/add_category_item', methods=['POST'])
 def admin_add_category_item():
+    if session.get('admin') != 1:
+        redirect(url_for('admin_auth'))
     type = request.form['type']
     title = request.form['title']
     db.add_category_item(g.db, title, type)
@@ -194,10 +200,24 @@ def admin_add_category_item():
 
 @app.route('/admin/delete_category_item', methods=['POST'])
 def admin_delete_category_item():
+    if session.get('admin') != 1:
+        redirect(url_for('admin_auth'))
     type = request.form['type']
     title = request.form['title']
     db.delete_category_item(g.db, title, type)
     return redirect(url_for('admin_category'))
+
+
+@app.route('/admin/auth', methods=['POST', 'GET'])
+def admin_auth():
+    if request.method == 'POST':
+        password = request.form.get('password')
+        if password == db.ADMIN_PASSWORD:
+            session['admin'] = 1
+            return redirect(url_for('admin_category'))
+        return render_template('admin_login_fail.html')
+    else:
+        return render_template('admin_auth.html')
 
 
 if __name__ == '__main__':

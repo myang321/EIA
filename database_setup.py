@@ -24,6 +24,7 @@ IMG_TABLE = "img"
 CATEGORY_FUNCTION_TABLE = "category_function"
 CATEGORY_UI_STYLE_TABLE = "category_ui_style"
 UPLOAD_FOLDER = 'static/upload/'
+ADMIN_PASSWORD = 'eiawestart'
 
 
 def get_random_number_str():
