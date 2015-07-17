@@ -1150,7 +1150,7 @@ header {
 
 .content-wrapper .content-container .col-main .new-product-block {
     background: none;
-    border: 0px;
+    border: 5px;
     padding: 9px 2px 5px 3px;
 }
 
@@ -1265,6 +1265,7 @@ header {
     height: 217px;
     text-align: center;
     margin: 5px;
+    border: 2px;
 }
 
 .content-wrapper .content-container .feature-block .product-grid li .pro-img img, .content-wrapper .content-container .new-product-block .product-grid li .pro-img img {
