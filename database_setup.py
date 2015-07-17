@@ -197,7 +197,6 @@ def search_by_category(con, c_func, c_ui):
         sql = "select * from {0} where c_function={1} and c_ui_style={2}".format(PRODUCTS_TABLE,
                                                                                  get_category_function_id(con, c_func),
                                                                                  get_category_ui_style_id(con, c_ui))
-    print sql
     result = execute_select_all(con, sql)
     list1 = []
     for row in result:
@@ -244,7 +243,6 @@ def get_product_detail(con, title):
     sql = "SELECT * from {0} where title='{1}'".format(PRODUCTS_TABLE, title)
     result = execute_select_one(con, sql)
     product = relation_to_object_mapping_product(con, result)
-    print product.img_list
     return product
 
 
@@ -292,7 +290,6 @@ def has_bought(con, title, buyer_id):
     sql = "select * from {0} where pid={1} and buyer_uid={2}".format(ORDERS_TABLE, p.pid, buyer_id)
     cursor.execute(sql)
     result = cursor.fetchone()
-    print result
     if result != None:
         return True
     else:
@@ -378,7 +375,6 @@ def save_image(con, file1, pid):
     # filename = str(pid) + '_' + get_random_number_str() + '_' + file1.filename
     ext = file1.filename.split('.')[-1]
     filename = str(pid) + get_random_number_str() + '.' + ext
-    print "save image file1 name", file1.filename
     if 'SERVER_SOFTWARE' in os.environ:
         from sae.storage import Bucket
 
@@ -388,9 +384,8 @@ def save_image(con, file1, pid):
     else:
         url = filename
         file_full_path = os.path.join(UPLOAD_FOLDER, filename)
-        if os.environ['USER'] == 'Lily':
+        if os.environ.get('USER') == 'Lily':
             file_full_path = "/Users/Lily/PycharmProjects/EIA/static/upload/" + filename
-        print file_full_path
         file1.save(file_full_path)
     save_img_url(con, url, pid, 1)
 
