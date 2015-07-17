@@ -31,6 +31,15 @@
     -o-background-size: cover;
 }
 
+#no-result {
+    font-family: "raleway-bold";
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 30px;
+    margin-left: 30px;
+    color: #0081c2;
+}
+
 /*.base_class {*/
 /*background: url('/static/img/index/billboard2.jpg') no-repeat;*/
 /*}*/

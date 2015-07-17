@@ -17,14 +17,14 @@
         <div class="tab-content">
             <div class="tab-pane active" id="tab1">
                 {% if list1|length==0 %}
-                    <div>Your havn't upload any product.</div>
+                    <div id="no-result">Sorry. Your haven't upload any product.</div>
                 {% else %}
                     {% include 'search_grid.html' %}
                 {% endif %}
             </div>
             <div class="tab-pane" id="tab2">
                 {% if list2|length==0 %}
-                    <div>You haven't sold any product yet.</div>
+                    <div id="no-result">Sorry. You haven't sold any product yet.</div>
                 {% else %}
                     {% include 'search_grid2.html' %}
                 {% endif %}
