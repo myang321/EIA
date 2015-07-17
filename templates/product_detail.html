@@ -127,7 +127,12 @@
     <script>
         $(document).ready(function () {
             $('#buy_button').click(function () {
-                return confirm('Are you sure to buy this product?');
+                {% if session.get('uid')==None %}
+                    alert('You need to login first.');
+                    return false;
+                {% else %}
+                    return confirm('Are you sure to buy this product?');
+                {% endif %}
             });
         });
     </script>
