@@ -146,11 +146,11 @@ def upload_product():
         pid = db.save_product(g.db, product)
     else:
         pid = db.update_product(g.db, product, old_title)
-    file_list = request.files.getlist('img')
-    for f in file_list:
-        if f.filename == '':
-            continue
-        db.save_image(g.db, f, pid)
+    front_img = request.files.get('front_img')
+    detail_img_list = request.files.getlist('detail_img')
+    db.save_image(g.db, front_img, pid, True)
+    for f in detail_img_list:
+        db.save_image(g.db, f, pid, False)
     return redirect(url_for('developer'))
 
 

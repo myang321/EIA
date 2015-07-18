@@ -137,6 +137,26 @@ def conn():
     return con1
 
 
+def execute_select_one(con, sql):
+    cursor = con.cursor()
+    cursor.execute(sql)
+    result = cursor.fetchone()
+    return result
+
+
+def execute_select_all(con, sql):
+    cursor = con.cursor()
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    return result
+
+
+def execute_non_query(con, sql):
+    cursor = con.cursor()
+    cursor.execute(sql)
+    con.commit()
+
+
 def developers_authentication(con, username, password):
     es_username = re.escape(username)
     sql = "select uid,username from {0} where username='{1}' and password='{2}' ".format(DEVELOPERS_TABLE,
@@ -387,27 +407,9 @@ def save_img_url(con, url, pid, is_front):
     execute_non_query(con, sql)
 
 
-def execute_select_one(con, sql):
-    cursor = con.cursor()
-    cursor.execute(sql)
-    result = cursor.fetchone()
-    return result
-
-
-def execute_select_all(con, sql):
-    cursor = con.cursor()
-    cursor.execute(sql)
-    result = cursor.fetchall()
-    return result
-
-
-def execute_non_query(con, sql):
-    cursor = con.cursor()
-    cursor.execute(sql)
-    con.commit()
-
-
-def save_image(con, file1, pid):
+def save_image(con, file1, pid, is_front):
+    if file1.filename == '':
+        return
     # filename = str(pid) + '_' + get_random_number_str() + '_' + file1.filename
     ext = file1.filename.split('.')[-1]
     filename = str(pid) + get_random_number_str() + '.' + ext
@@ -423,7 +425,7 @@ def save_image(con, file1, pid):
         if os.environ.get('USER') == 'Lily':
             file_full_path = "/Users/Lily/PycharmProjects/EIA/static/upload/" + filename
         file1.save(file_full_path)
-    save_img_url(con, url, pid, 1)
+    save_img_url(con, url, pid, 1 if is_front else 0)
 
 
 def get_product_img(con, pid):

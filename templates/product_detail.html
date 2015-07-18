@@ -29,7 +29,7 @@
                                         {% for i in range(p.img_list|length) %}
                                             <li>
                                                 <img class="image-size" src="{{ p.img_list[i] }}" alt="{{ i }}"
-                                                     title="{{ i }}"
+                                                     title="{{ i + 1 }}"
                                                      id="{{ "wows1_"+i|string }}"/>
                                             </li>
                                         {% endfor %}
