@@ -194,12 +194,12 @@
 }
 
 .main .product-info-box .product-shop .add-to-cart-box .form-button, .quick-view-right .add-to-cart-box .form-button {
-    background: #000000;
+    background: #656565;
 }
 
 .main .product-info-box .product-shop .add-to-cart-box .form-button:hover, .quick-view-right .add-to-cart-box .form-button:hover {
-    background: #e6e6e6;
-    color: #363636;
+    background: #828282;
+    color: #ffffff;
 }
 
 .main .product-info-box .product-shop .add-to-cart-box .add-to-box li a.email-friend {
@@ -211,8 +211,8 @@
 }
 
 .main .product-collateral .tab-block li a.active {
-    background: #000000;
-    border-color: #000000;
+    background: #656565;
+    border-color: #656565;
 }
 
 .main .like-pro-block .like-pro .product-grid li .pro-detail-block h4, .main .like-pro-block .like-pro .product-grid li .pro-detail-block .pro-price {
