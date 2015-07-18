@@ -13,13 +13,13 @@
         <div class="form-item">
             <input type="text" name="price" placeholder="price" value="{{ p.price }}"><br></div>
         <div class="form-item">
-            <textarea id="description" name="description" placeholder="description">{{ p.description }}</textarea><br>
+            <textarea id="description" name="description" placeholder="description">{{ p.get_description() }}</textarea><br>
         </div>
         <div class="form-item">
             <select name="c_func">
                 <option value="all">Select your function</option>
                 {% for i in c_func %}
-                    {% if i==p.c_func %}
+                    {% if i.title==p.c_func %}
                         <option value="{{ i.title }}" selected="selected">{{ i.title }}</option>
                     {% else %}
                         <option value="{{ i.title }}">{{ i.title }}</option>
@@ -32,7 +32,7 @@
             <select name="c_ui">
                 <option value="all">Select your UI style</option>
                 {% for i in c_ui %}
-                    {% if i==p.c_ui %}
+                    {% if i.title==p.c_ui %}
                         <option value="{{ i.title }}" selected="selected">{{ i.title }}</option>
                     {% else %}
                         <option value="{{ i.title }}">{{ i.title }}</option>

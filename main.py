@@ -79,14 +79,11 @@ def signup():
         return redirect(url_for('index', status=0))
 
 
-@app.route('/search', methods=['GET', 'POST'])
+@app.route('/search', methods=['GET'])
 def search():
-    if request.method == 'POST':
-        c_func = request.form['c_func']
-        c_ui = request.form['c_ui']
-        list1 = db.search_by_category(g.db, c_func, c_ui)
-    else:
-        list1 = db.search_by_category(g.db, 'all', 'all')
+    c_func = request.args['c_func']
+    c_ui = request.args['c_ui']
+    list1 = db.search_by_category(g.db, c_func, c_ui)
     editable = False
     return render_template('search.html', list1=list1, editable=editable)
 

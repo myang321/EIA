@@ -22,11 +22,13 @@
                     {% include 'search_grid.html' %}
                 {% endif %}
             </div>
+            {% set list1=list2 %}
+            {% set editable=False %}
             <div class="tab-pane" id="tab2">
-                {% if list2|length==0 %}
+                {% if list1|length==0 %}
                     <div id="no-result">Sorry. You haven't sold any product yet.</div>
                 {% else %}
-                    {% include 'search_grid2.html' %}
+                    {% include 'search_grid.html' %}
                 {% endif %}
             </div>
             <div class="tab-pane" id="tab3">

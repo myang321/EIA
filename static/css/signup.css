@@ -1,5 +1,5 @@
 h3 {
-     color: #000000;
+    color: #000000;
     font-family: "raleway-regular", arial;
     letter-spacing: 1px;
     font-size: 2em;
@@ -83,4 +83,8 @@ form {
     color: #fff;
     font-family: 'Open Sans', sans-serif;
     font-size: 1.2em;
+}
+
+.dialog {
+    z-index: 2;
 }

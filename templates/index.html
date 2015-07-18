@@ -16,7 +16,7 @@
 
     </div>
     <div class="caption1">
-        <form class="form" method="post" action={{ url_for("search") }}>
+        <form class="form" method="get" action={{ url_for("search") }}>
             <select name="c_func">
                 <option value="all">Select your function</option>
                 {% for i in c_func %}
