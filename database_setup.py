@@ -15,14 +15,19 @@ from random import randint
 import smtplib
 from threading import Thread
 
+# table name
 DEVELOPERS_TABLE = "developers"
 BUYERS_TABLE = "buyers"
 PRODUCTS_TABLE = "products"
 ORDERS_TABLE = "orders"
 IMG_TABLE = "img"
+CATEGORY_TABLE = "category"
+PRODUCT_CATEGORY_TABLE = "product_category"
 
-CATEGORY_FUNCTION_TABLE = "category_function"
-CATEGORY_UI_STYLE_TABLE = "category_ui_style"
+# category type
+TYPE_C_FUNC = 'c_func'
+TYPE_C_UI = 'c_ui'
+
 UPLOAD_FOLDER = 'static/upload/'
 ADMIN_PASSWORD = 'eiawestart'
 
@@ -39,20 +44,11 @@ class User(object):
 
 
 class Category(object):
-    def __init__(self, cid, title, description=None):
+    def __init__(self, cid, title, type, description=None):
         self.cid = cid
         self.title = title
+        self.type = type
         self.description = description
-
-
-class CategoryFunction(Category):
-    def __init__(self, cid, title, description=None):
-        super(self.__class__, self).__init__(cid, title, description)
-
-
-class CategoryUIStyle(Category):
-    def __init__(self, cid, title, description=None):
-        super(self.__class__, self).__init__(cid, title, description)
 
 
 class Buyer(User):
@@ -82,10 +78,10 @@ class Product(object):
             self.img_list = ['/static/img/no_image2.png']
 
     def get_description(self):
-        print self.description
+        # print self.description
         str = self.description.decode('string_escape')
         str = str.replace('\\', '')
-        print str
+        # print str
         return str
 
 
@@ -213,14 +209,15 @@ def is_email_exist(con, email, type):
     return False
 
 
-def get_category_id(con, title, table_name):
-    sql = "select cid from {0} where title='{1}'".format(table_name, title)
+def get_category_id(con, title, type):
+    sql = "select cid from {0} where type='{1}' and title='{2}'".format(CATEGORY_TABLE, type, title)
     result = execute_select_one(con, sql)
     return result[0]
 
 
-def get_category_title(con, id, table_name):
-    sql = "select title from {0} where cid={1}".format(table_name, id)
+def get_category_title(con, pid, type):
+    sql = "select title from {0} as pc, {1} as c where pid ={2} and c.cid=pc.cid and c.type='{3}' ".format(
+        PRODUCT_CATEGORY_TABLE, CATEGORY_TABLE, pid, type)
     result = execute_select_one(con, sql)
     return result[0]
 
@@ -229,17 +226,26 @@ def search_by_category(con, c_func, c_ui):
     if c_func == 'all' and c_ui == 'all':
         sql = "select * from {0}".format(PRODUCTS_TABLE)
     elif c_ui == 'all':
-        sql = "select * from {0} where c_function={1}".format(PRODUCTS_TABLE,
-                                                              get_category_id(con, c_func, CATEGORY_FUNCTION_TABLE))
+        sql = "select * from {0} where pid in ( select pid from {1} where cid={2} )".format(PRODUCTS_TABLE,
+                                                                                            PRODUCT_CATEGORY_TABLE,
+                                                                                            get_category_id(con, c_func,
+                                                                                                            TYPE_C_FUNC))
     elif c_func == 'all':
-        sql = "select * from {0} where c_ui_style={1}".format(PRODUCTS_TABLE,
-                                                              get_category_id(con, c_ui, CATEGORY_UI_STYLE_TABLE))
+        sql = "select * from {0} where pid in ( select pid from {1} where cid={2} )".format(PRODUCTS_TABLE,
+                                                                                            PRODUCT_CATEGORY_TABLE,
+                                                                                            get_category_id(con, c_ui,
+                                                                                                            TYPE_C_UI))
     else:
-        sql = "select * from {0} where c_function={1} and c_ui_style={2}".format(PRODUCTS_TABLE,
-                                                                                 get_category_id(con, c_func,
-                                                                                                 CATEGORY_FUNCTION_TABLE),
-                                                                                 get_category_id(con, c_ui,
-                                                                                                 CATEGORY_UI_STYLE_TABLE))
+        sql = """
+        select * from {0} where pid in(
+        select t1.pid from(
+         (select * from product_category where cid={1} )
+        union all
+        (select * from product_category where cid={2} )
+        ) as t1 group by t1.pid having count(*)=2)
+        """.format(PRODUCTS_TABLE,
+                   get_category_id(con, c_func, TYPE_C_FUNC),
+                   get_category_id(con, c_ui, TYPE_C_UI))
     result = execute_select_all(con, sql)
     list1 = []
     for row in result:
@@ -250,11 +256,11 @@ def search_by_category(con, c_func, c_ui):
 
 def relation_to_object_mapping_product(con, row):
     pid = row[0]
+    c_func = get_category_title(con, pid, TYPE_C_FUNC)
+    c_ui = get_category_title(con, pid, TYPE_C_UI)
     product = Product(title=row[1], price=row[4], description=row[3],
-                      c_func=get_category_title(con, row[6], CATEGORY_FUNCTION_TABLE),
-                      c_ui=get_category_title(con, row[7], CATEGORY_UI_STYLE_TABLE), dev_uid=row[2],
-                      img_list=get_product_img(con, pid),
-                      pid=pid)
+                      c_func=c_func, c_ui=c_ui, dev_uid=row[2],
+                      img_list=get_product_img(con, pid), pid=pid)
     return product
 
 
@@ -268,30 +274,28 @@ def relation_to_object_mapping_buyer(con, row):
     return buyer
 
 
-def relation_to_object_mapping_category_function(con, row):
-    c_func = CategoryFunction(cid=row[0], title=row[1], description=row[3])
-    return c_func
+# def relation_to_object_mapping_category_function(con, row):
+#     c_func = CategoryFunction(cid=row[0], title=row[1], description=row[3])
+#     return c_func
+#
+#
+# def relation_to_object_mapping_category_ui_style(con, row):
+#     c_ui = CategoryUIStyle(cid=row[0], title=row[1], description=row[3])
+#     return c_ui
 
 
-def relation_to_object_mapping_category_ui_style(con, row):
-    c_ui = CategoryUIStyle(cid=row[0], title=row[1], description=row[3])
-    return c_ui
-
-
-def get_category_function_list(con):
-    sql = "SELECT * from {0}".format(CATEGORY_FUNCTION_TABLE)
+def get_category_value_list(con, type):
+    sql = "select * from {0} where type='{1}'".format(CATEGORY_TABLE, type)
     result = execute_select_all(con, sql)
     # convert to list
-    list1 = [CategoryFunction(cid=row[0], title=row[1]) for row in result]
+    list1 = [Category(cid=row[0], type=row[1], title=row[2]) for row in result]
     return list1
 
 
-def get_category_ui_style_list(con):
-    sql = "SELECT * from {0}".format(CATEGORY_UI_STYLE_TABLE)
-    result = execute_select_all(con, sql)
-    # convert to list
-    list1 = [CategoryUIStyle(cid=row[0], title=row[1]) for row in result]
-    return list1
+def get_product_id(con, title):
+    sql = "SELECT pid from {0} where title='{1}'".format(PRODUCTS_TABLE, title)
+    result = execute_select_one(con, sql)
+    return result[0]
 
 
 def get_product_detail(con, title):
@@ -384,21 +388,34 @@ def get_developer_orders(con, dev_id):
 
 
 def save_product(con, p):
-    sql = "insert into {0} (title,dev_uid,description,price,c_function,c_ui_style) values('{1}',{2},'{3}',{4},{5},{6})".format(
-        PRODUCTS_TABLE, p.title, p.dev_uid, p.description, p.price,
-        get_category_id(con, p.c_func, CATEGORY_FUNCTION_TABLE),
-        get_category_id(con, p.c_ui, CATEGORY_UI_STYLE_TABLE))
+    sql = "insert into {0} (title,dev_uid,description,price) values('{1}',{2},'{3}',{4})".format(
+        PRODUCTS_TABLE, p.title, p.dev_uid, p.description, p.price)
     execute_non_query(con, sql)
-    p = get_product_detail(con, p.title)
-    return p.pid
+    pid = get_product_id(con, p.title)
+    add_product_category(con, pid, TYPE_C_FUNC, p.c_func)
+    add_product_category(con, pid, TYPE_C_UI, p.c_ui)
+    return pid
+
+
+def add_product_category(con, pid, type, title):
+    cid = get_category_id(con, title, type)
+    sql = "insert into {0} values ({1},{2})".format(PRODUCT_CATEGORY_TABLE, pid, cid)
+    execute_non_query(con, sql)
+
+
+def delete_product_category(con, pid):
+    sql = "delete from {0} where pid ={1}".format(PRODUCT_CATEGORY_TABLE, pid)
+    execute_non_query(con, sql)
 
 
 def update_product(con, p, old_title):
-    sql = "update {0} set title='{1}' , price={2}, description='{3}' , c_function={4}, c_ui_style={5} where title='{6}'".format(
-        PRODUCTS_TABLE, p.title, p.price, p.description, get_category_id(con, p.c_func, CATEGORY_FUNCTION_TABLE),
-        get_category_id(con, p.c_ui, CATEGORY_UI_STYLE_TABLE), old_title)
+    sql = "update {0} set title='{1}' , price={2}, description='{3}'  where title='{4}'".format(
+        PRODUCTS_TABLE, p.title, p.price, p.description, old_title)
     execute_non_query(con, sql)
-    p = get_product_detail(con, p.title)
+    pid = get_product_id(con, p.title)
+    delete_product_category(con, pid)
+    add_product_category(con, pid, TYPE_C_FUNC, p.c_func)
+    add_product_category(con, pid, TYPE_C_UI, p.c_ui)
     return p.pid
 
 
@@ -446,24 +463,12 @@ def send_mail(to_addrs, buyer, product_title):
 
 
 def add_category_item(con, title, type):
-    if type == 'c_func':
-        table_name = CATEGORY_FUNCTION_TABLE
-    elif type == 'c_ui':
-        table_name = CATEGORY_UI_STYLE_TABLE
-    else:
-        return
-    sql = "insert into {0} (title) values ('{1}') ".format(table_name, title)
+    sql = "insert into {0} (type,title) values('{1}','{2}') ".format(CATEGORY_TABLE, type, title)
     execute_non_query(con, sql)
 
 
 def delete_category_item(con, title, type):
-    if type == 'c_func':
-        table_name = CATEGORY_FUNCTION_TABLE
-    elif type == 'c_ui':
-        table_name = CATEGORY_UI_STYLE_TABLE
-    else:
-        return
-    sql = "delete from {0} where title='{1}' ".format(table_name, title)
+    sql = "delete from {0} where title='{1}' and type='{2}' ".format(CATEGORY_TABLE, title, type)
     execute_non_query(con, sql)
 
 

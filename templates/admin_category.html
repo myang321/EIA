@@ -20,7 +20,7 @@
                         <input type="hidden" name="type" value="c_func">
                         <input type="hidden" name="title" value="{{ i.title }}">
                         <span>title:{{ i.title }}</span>
-                        <input type="submit" value="Delete">
+                        <input type="submit" class="delete_button" value="Delete">
                     </form>
                 </div>
             {% endfor %}
@@ -41,11 +41,22 @@
                         <input type="hidden" name="type" value="c_ui">
                         <input type="hidden" name="title" value="{{ i.title }}">
                         <span>title:{{ i.title }}</span>
-                        <input type="submit" value="Delete">
+                        <input type="submit" class="delete_button" value="Delete">
                     </form>
                 </div>
             {% endfor %}
         </div>
     </div>
 
+{% endblock %}
+
+
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            $(".delete_button").click(function () {
+                return confirm('Are you sure to delete this?');
+            });
+        });
+    </script>
 {% endblock %}

@@ -2,7 +2,6 @@ from flask import Flask, render_template, redirect, request, session, url_for, g
 
 import database_setup as db
 
-
 app = Flask(__name__)
 app.debug = True
 app.secret_key = 'F12Zr47j3yXR~X@H!jmM]Lwf/,?KT'
@@ -27,8 +26,8 @@ def index(status=0, msg=None):
     if request.method == 'POST':
         pass
     else:
-        c_func = db.get_category_function_list(g.db)
-        c_ui = db.get_category_ui_style_list(g.db)
+        c_func = db.get_category_value_list(g.db, db.TYPE_C_FUNC)
+        c_ui = db.get_category_value_list(g.db, db.TYPE_C_UI)
         return render_template('index.html', status=status, msg=msg, c_func=c_func, c_ui=c_ui)
 
 
@@ -98,8 +97,8 @@ def logout():
 def developer():
     list1 = db.get_developers_products(g.db, session['uid'])
     list2 = db.get_developer_orders(g.db, session['uid'])
-    c_func = db.get_category_function_list(g.db)
-    c_ui = db.get_category_ui_style_list(g.db)
+    c_func = db.get_category_value_list(g.db, db.TYPE_C_FUNC)
+    c_ui = db.get_category_value_list(g.db, db.TYPE_C_UI)
     editable = True
     p = db.Product()
     is_new = True
@@ -161,8 +160,8 @@ def edit_product():
     else:
         p_title = request.args.get('p_title')
         product = db.get_product_detail(g.db, p_title)
-        c_func = db.get_category_function_list(g.db)
-        c_ui = db.get_category_ui_style_list(g.db)
+        c_func = db.get_category_value_list(g.db, db.TYPE_C_FUNC)
+        c_ui = db.get_category_value_list(g.db, db.TYPE_C_UI)
         is_new = False
         return render_template('edit_product.html', p=product, c_func=c_func, c_ui=c_ui, is_new=is_new)
 
@@ -180,8 +179,8 @@ def admin_category():
     if session.get('admin') != 1:
         print "redirect(url_for('admin_auth'))"
         return redirect(url_for('admin_auth'))
-    c_func = db.get_category_function_list(g.db)
-    c_ui = db.get_category_ui_style_list(g.db)
+    c_func = db.get_category_value_list(g.db, db.TYPE_C_FUNC)
+    c_ui = db.get_category_value_list(g.db, db.TYPE_C_UI)
     return render_template('admin_category.html', c_func=c_func, c_ui=c_ui)
 
 
