@@ -20,7 +20,7 @@
                             <a href="{{ url_for('edit_product',p_title=list1[i].title) }}">
                                 <button type="button">Edit</button>
                             </a>
-                            <button id="delete_button" form="delete_form">Delete</button>
+                            <button class="delete_button" form="delete_form">Delete</button>
                             <form id="delete_form" action="{{ url_for('delete_product') }}" method="POST">
                                 <input type="hidden" name="p_title" value="{{ list1[i].title }}">
                             </form>
@@ -46,7 +46,7 @@
 </section>
 <script>
     $(document).ready(function () {
-        $('#delete_button').click(function () {
+        $('.delete_button').click(function () {
             return confirm('Are you sure to delete this product?');
         });
     });

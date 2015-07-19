@@ -170,7 +170,7 @@ def edit_product():
 def delete_product():
     product_title = request.form['p_title']
     db.delete_product(g.db, product_title)
-    return render_template('developer.html')
+    return redirect(url_for('developer'))
 
 
 @app.route('/admin/category', methods=['GET'])
