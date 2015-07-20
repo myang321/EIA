@@ -169,9 +169,7 @@ def edit_product():
 @app.route('/delete_product/', methods=['POST'])
 def delete_product():
     product_title = request.form['p_title']
-    pid = db.get_product_id(g.db, product_title)
-    db.delete_product_category(g.db, pid)
-    db.delete_img(g.db,pid)
+    print "title", product_title
     db.delete_product(g.db, product_title)
     return redirect(url_for('developer'))
 

@@ -14,7 +14,12 @@ import re
 from random import randint
 import smtplib
 from threading import Thread
-
+# For SAE
+if 'SERVER_SOFTWARE' in os.environ:
+    from sae.const import (MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASS, MYSQL_DB)
+    from sae.storage import Bucket
+else:
+    from local import *
 # table name
 DEVELOPERS_TABLE = "developers"
 BUYERS_TABLE = "buyers"
@@ -119,12 +124,10 @@ class SendEmailThread(Thread):
 def conn():
     if 'SERVER_SOFTWARE' in os.environ:
         # for SAE
-        from sae.const import (MYSQL_HOST, MYSQL_PORT, MYSQL_USER, MYSQL_PASS, MYSQL_DB)
 
         con1 = mdb.connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB, port=int(MYSQL_PORT))
     else:
         # for local
-        from local import *
 
         print "connecting local mysql"
 
@@ -420,10 +423,14 @@ def delete_product_category(con, pid):
     execute_non_query(con, sql)
 
 
-def delete_img(con, pid):
-    pass
-    # sql = "delete from {0} where pid ={1}".format(PRODUCT_CATEGORY_TABLE, pid)
-    # execute_non_query(con, sql)
+def delete_img(con, pid, title):
+    if 'SERVER_SOFTWARE' in os.environ:
+        p = get_product_detail(con, title)
+        for img_name in p.img_list:
+            bucket = Bucket('domain1')
+            bucket.delete_object(img_name)
+    sql = "delete from {0} where pid ={1}".format(IMG_TABLE, pid)
+    execute_non_query(con, sql)
 
 
 def update_product(con, p, old_title):
@@ -449,8 +456,6 @@ def save_image(con, file1, pid, is_front):
     ext = file1.filename.split('.')[-1]
     filename = str(pid) + get_random_number_str() + '.' + ext
     if 'SERVER_SOFTWARE' in os.environ:
-        from sae.storage import Bucket
-
         bucket = Bucket('domain1')
         bucket.put_object(filename, file1)
         url = bucket.generate_url(filename)
@@ -471,6 +476,9 @@ def get_product_img(con, pid):
 
 
 def delete_product(con, p_title):
+    pid = get_product_id(con, p_title)
+    delete_product_category(con, pid)
+    delete_img(con, pid, p_title)
     sql = "delete from {0} where title='{1}'".format(PRODUCTS_TABLE, p_title)
     execute_non_query(con, sql)
 
