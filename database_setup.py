@@ -135,21 +135,33 @@ def conn():
 
 def execute_select_one(con, sql):
     cursor = con.cursor()
-    cursor.execute(sql)
+    try:
+        cursor.execute(sql)
+    except:
+        print "ERROR", sql
+        raise
     result = cursor.fetchone()
     return result
 
 
 def execute_select_all(con, sql):
     cursor = con.cursor()
-    cursor.execute(sql)
+    try:
+        cursor.execute(sql)
+    except:
+        print "ERROR", sql
+        raise
     result = cursor.fetchall()
     return result
 
 
 def execute_non_query(con, sql):
     cursor = con.cursor()
-    cursor.execute(sql)
+    try:
+        cursor.execute(sql)
+    except:
+        print "ERROR", sql
+        raise
     con.commit()
 
 
@@ -408,6 +420,12 @@ def delete_product_category(con, pid):
     execute_non_query(con, sql)
 
 
+def delete_img(con, pid):
+    pass
+    # sql = "delete from {0} where pid ={1}".format(PRODUCT_CATEGORY_TABLE, pid)
+    # execute_non_query(con, sql)
+
+
 def update_product(con, p, old_title):
     sql = "update {0} set title='{1}' , price={2}, description='{3}'  where title='{4}'".format(
         PRODUCTS_TABLE, p.title, p.price, p.description, old_title)
@@ -416,7 +434,7 @@ def update_product(con, p, old_title):
     delete_product_category(con, pid)
     add_product_category(con, pid, TYPE_C_FUNC, p.c_func)
     add_product_category(con, pid, TYPE_C_UI, p.c_ui)
-    return p.pid
+    return pid
 
 
 def save_img_url(con, url, pid, is_front):

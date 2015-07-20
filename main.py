@@ -169,15 +169,16 @@ def edit_product():
 @app.route('/delete_product/', methods=['POST'])
 def delete_product():
     product_title = request.form['p_title']
+    pid = db.get_product_id(g.db, product_title)
+    db.delete_product_category(g.db, pid)
+    db.delete_img(g.db,pid)
     db.delete_product(g.db, product_title)
     return redirect(url_for('developer'))
 
 
 @app.route('/admin/category', methods=['GET'])
 def admin_category():
-    print session.get('admin'), session.get('admin') != 1
     if session.get('admin') != 1:
-        print "redirect(url_for('admin_auth'))"
         return redirect(url_for('admin_auth'))
     c_func = db.get_category_value_list(g.db, db.TYPE_C_FUNC)
     c_ui = db.get_category_value_list(g.db, db.TYPE_C_UI)
