@@ -234,7 +234,9 @@ def get_category_title(con, pid, type):
     sql = "select title from {0} as pc, {1} as c where pid ={2} and c.cid=pc.cid and c.type='{3}' ".format(
         PRODUCT_CATEGORY_TABLE, CATEGORY_TABLE, pid, type)
     result = execute_select_one(con, sql)
-    return result[0]
+    if result:
+        return result[0]
+    return None
 
 
 def search_by_category(con, c_func, c_ui):
@@ -271,8 +273,10 @@ def search_by_category(con, c_func, c_ui):
 
 def relation_to_object_mapping_product(con, row):
     pid = row[0]
+    print "in relational mapping"
     c_func = get_category_title(con, pid, TYPE_C_FUNC)
     c_ui = get_category_title(con, pid, TYPE_C_UI)
+    print "c_func", c_func
     product = Product(title=row[1], price=row[4], description=row[3],
                       c_func=c_func, c_ui=c_ui, dev_uid=row[2],
                       img_list=get_product_img(con, pid), pid=pid)
@@ -477,7 +481,9 @@ def get_product_img(con, pid):
 
 def delete_product(con, p_title):
     pid = get_product_id(con, p_title)
+    print "before delete category"
     delete_product_category(con, pid)
+    print "before detele img"
     delete_img(con, pid, p_title)
     sql = "delete from {0} where title='{1}'".format(PRODUCTS_TABLE, p_title)
     execute_non_query(con, sql)
