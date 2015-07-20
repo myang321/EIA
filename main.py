@@ -133,6 +133,7 @@ def buy():
 
 @app.route('/upload/', methods=['POST'])
 def upload_product():
+    print "enter upload product"
     product_title = request.form['title']
     price = request.form['price']
     description = request.form['description']
@@ -142,7 +143,9 @@ def upload_product():
     old_title = request.form.get('old_title')
     product = db.Product(product_title, price, description, c_func, c_ui, session['uid'])
     if is_new == "True":
+        print "begin save product"
         pid = db.save_product(g.db, product)
+        print "save product done"
     else:
         pid = db.update_product(g.db, product, old_title)
     front_img = request.files.get('front_img')

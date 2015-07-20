@@ -276,7 +276,6 @@ def relation_to_object_mapping_product(con, row):
     print "in relational mapping"
     c_func = get_category_title(con, pid, TYPE_C_FUNC)
     c_ui = get_category_title(con, pid, TYPE_C_UI)
-    print "c_func", c_func
     product = Product(title=row[1], price=row[4], description=row[3],
                       c_func=c_func, c_ui=c_ui, dev_uid=row[2],
                       img_list=get_product_img(con, pid), pid=pid)
@@ -430,9 +429,11 @@ def delete_product_category(con, pid):
 def delete_img(con, pid, title):
     if 'SERVER_SOFTWARE' in os.environ:
         p = get_product_detail(con, title)
-        for img_name in p.img_list:
-            bucket = Bucket('domain1')
+        bucket = Bucket('domain1')
+        for url in p.img_list:
+            img_name = url.split("/")[-1]
             bucket.delete_object(img_name)
+            print "delete bucket object", img_name
     sql = "delete from {0} where pid ={1}".format(IMG_TABLE, pid)
     execute_non_query(con, sql)
 
