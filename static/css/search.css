@@ -837,10 +837,10 @@ ul, li, h1, h2, h3, h4, h5, h6 {
     padding: 3px 0px 0px;
 }
 
-header {
-    max-width: 1000px;
-    margin: 0px auto;
-}
+/*header {*/
+    /*max-width: 1000px;*/
+    /*margin: 0px auto;*/
+/*}*/
 
 .header-wrapper header .logo {
     margin: 15px 0px;
