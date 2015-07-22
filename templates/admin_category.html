@@ -14,7 +14,7 @@
             <input type="submit" value="Add">
         </form>
         <div>
-            {% for i in c_func %}
+            {% for i in c_func_list %}
                 <div>
                     <form class="form" method="post" action={{ url_for("admin_delete_category_item") }}>
                         <input type="hidden" name="type" value="c_func">
@@ -35,7 +35,7 @@
             <input type="submit" value="Add">
         </form>
         <div>
-            {% for i in c_ui %}
+            {% for i in c_ui_list %}
                 <div>
                     <form class="form" method="post" action={{ url_for("admin_delete_category_item") }}>
                         <input type="hidden" name="type" value="c_ui">

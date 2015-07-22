@@ -19,7 +19,7 @@
         <div class="form-item">
             <select name="c_func" required>
                 <option value="">Select your function</option>
-                {% for i in c_func %}
+                {% for i in c_func_list %}
                     {% if i.title==p.c_func %}
                         <option value="{{ i.title }}" selected="selected">{{ i.title }}</option>
                     {% else %}
@@ -32,7 +32,7 @@
         <div class="form-item">
             <select name="c_ui" required>
                 <option value="">Select your UI style</option>
-                {% for i in c_ui %}
+                {% for i in c_ui_list %}
                     {% if i.title==p.c_ui %}
                         <option value="{{ i.title }}" selected="selected">{{ i.title }}</option>
                     {% else %}

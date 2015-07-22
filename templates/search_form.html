@@ -2,13 +2,13 @@
     <form class="form" method="get" action={{ url_for("search") }}>
         <select name="c_func">
             <option value="all">Select your function</option>
-            {% for i in c_func %}
+            {% for i in c_func_list %}
                 <option value="{{ i.title }}">{{ i.title }}</option>
             {% endfor %}
         </select>
         <select name="c_ui">
             <option value="all">Select your UI style</option>
-            {% for i in c_ui %}
+            {% for i in c_ui_list %}
                 <option value="{{ i.title }}">{{ i.title }}</option>
             {% endfor %}
         </select>

@@ -26,9 +26,7 @@ def index(status=0, msg=None):
     if request.method == 'POST':
         pass
     else:
-        c_func = db.get_category_value_list(g.db, db.TYPE_C_FUNC)
-        c_ui = db.get_category_value_list(g.db, db.TYPE_C_UI)
-        return render_template('index.html', status=status, msg=msg, c_func=c_func, c_ui=c_ui)
+        return render_template('index.html', status=status, msg=msg)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -84,9 +82,7 @@ def search():
     c_ui = request.args['c_ui']
     list1 = db.search_by_category(g.db, c_func, c_ui)
     editable = False
-    c_func = db.get_category_value_list(g.db, db.TYPE_C_FUNC)
-    c_ui = db.get_category_value_list(g.db, db.TYPE_C_UI)
-    return render_template('search.html', list1=list1, editable=editable, c_func=c_func, c_ui=c_ui)
+    return render_template('search.html', list1=list1, editable=editable)
 
 
 @app.route('/logout/')
@@ -99,12 +95,10 @@ def logout():
 def developer():
     list1 = db.get_developers_products(g.db, session['uid'])
     list2 = db.get_developer_orders(g.db, session['uid'])
-    c_func = db.get_category_value_list(g.db, db.TYPE_C_FUNC)
-    c_ui = db.get_category_value_list(g.db, db.TYPE_C_UI)
     editable = True
     p = db.Product()
     is_new = True
-    return render_template('developer.html', list1=list1, list2=list2, c_func=c_func, c_ui=c_ui, editable=editable, p=p,
+    return render_template('developer.html', list1=list1, list2=list2, editable=editable, p=p,
                            is_new=is_new)
 
 
@@ -165,10 +159,8 @@ def edit_product():
     else:
         p_title = request.args.get('p_title')
         product = db.get_product_detail(g.db, p_title)
-        c_func = db.get_category_value_list(g.db, db.TYPE_C_FUNC)
-        c_ui = db.get_category_value_list(g.db, db.TYPE_C_UI)
         is_new = False
-        return render_template('edit_product.html', p=product, c_func=c_func, c_ui=c_ui, is_new=is_new)
+        return render_template('edit_product.html', p=product, is_new=is_new)
 
 
 @app.route('/delete_product/', methods=['POST'])
@@ -183,9 +175,7 @@ def delete_product():
 def admin_category():
     if session.get('admin') != 1:
         return redirect(url_for('admin_auth'))
-    c_func = db.get_category_value_list(g.db, db.TYPE_C_FUNC)
-    c_ui = db.get_category_value_list(g.db, db.TYPE_C_UI)
-    return render_template('admin_category.html', c_func=c_func, c_ui=c_ui)
+    return render_template('admin_category.html')
 
 
 @app.route('/admin/add_category_item', methods=['POST'])
@@ -218,6 +208,13 @@ def admin_auth():
         return render_template('admin_login_fail.html')
     else:
         return render_template('admin_auth.html')
+
+
+@app.context_processor
+def category_list():
+    c_func_list = db.get_category_value_list(g.db, db.TYPE_C_FUNC)
+    c_ui_list = db.get_category_value_list(g.db, db.TYPE_C_UI)
+    return dict(c_func_list=c_func_list, c_ui_list=c_ui_list)
 
 
 if __name__ == '__main__':
