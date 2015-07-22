@@ -1,0 +1,9 @@
+.nav {
+    font-weight: bold;
+    font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif;
+    color: white;
+}
+
+.nav > li {
+    background: #009DFF;
+}
