@@ -11,3 +11,10 @@
 header.wrapper {
     background: transparent;
 }
+
+.caption1 {
+    text-align: center;
+    margin-top: 80px;
+    border: 0px solid cornflowerblue;
+    margin: 30px;
+}

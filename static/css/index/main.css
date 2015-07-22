@@ -63,8 +63,8 @@ body {
 }
 
 /*.wrapper {*/
-    /*width: 1300px;*/
-    /*margin: 0 auto;*/
+/*width: 1300px;*/
+/*margin: 0 auto;*/
 /*}*/
 
 h1, h2, h3, h4, h5, h6 {
@@ -127,10 +127,10 @@ h5, h6 {
 /*.billboard.light {*/
 /*background: url('/static/img/index/billboard2.jpg') no-repeat;*/
 
-    /*background-size: cover;*/
-    /*-webkit-background-size: cover;*/
-    /*-moz-background-size: cover;*/
-    /*-o-background-size: cover;*/
+/*background-size: cover;*/
+/*-webkit-background-size: cover;*/
+/*-moz-background-size: cover;*/
+/*-o-background-size: cover;*/
 /*}*/
 
 .billboard .shadow {
@@ -146,13 +146,6 @@ h5, h6 {
 .billboard .caption {
     margin-top: 130px;
     text-align: center;
-}
-
-.caption1 {
-    margin-top: 80px;
-    text-align: center;
-    border: 0px solid cornflowerblue;
-    margin: 30px;
 }
 
 .caption1 #searchButton {
@@ -232,10 +225,10 @@ h5, h6 {
 }
 
 /*    header    */
-header {
-    width: 100%;
-    height: 125px;
-}
+/*header {*/
+/*width: 100%;*/
+/*height: 125px;*/
+/*}*/
 
 header .logo {
     float: left;

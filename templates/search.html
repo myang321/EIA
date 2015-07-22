@@ -1,12 +1,15 @@
 {% extends "base2.html" %}
 
 {% block head %}
+
     <link rel="stylesheet" type="text/css" href="/static/css/search.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/search_grid.css">
     {#        <link rel="stylesheet" type="text/css" href="/static/css/colors.css">#}
 
 {% endblock %}
 
 {% block body %}
+    {% include 'search_form.html' %}
     {% if list1|length==0 %}
         <div id="no-result">Sorry. Your search has no result.</div>
     {% else %}

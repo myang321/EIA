@@ -84,7 +84,9 @@ def search():
     c_ui = request.args['c_ui']
     list1 = db.search_by_category(g.db, c_func, c_ui)
     editable = False
-    return render_template('search.html', list1=list1, editable=editable)
+    c_func = db.get_category_value_list(g.db, db.TYPE_C_FUNC)
+    c_ui = db.get_category_value_list(g.db, db.TYPE_C_UI)
+    return render_template('search.html', list1=list1, editable=editable, c_func=c_func, c_ui=c_ui)
 
 
 @app.route('/logout/')
