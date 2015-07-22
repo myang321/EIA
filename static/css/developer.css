@@ -1,6 +1,7 @@
 .nav {
-    font-weight: bold;
-    font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif;
+    /*font-weight: bold;*/
+    /*font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif;*/
+    font-family: 'Open Sans', sans-serif;
     color: white;
 }
 
