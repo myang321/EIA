@@ -49,10 +49,10 @@ class User(object):
 
 
 class Category(object):
-    def __init__(self, cid, title, type, description=None):
+    def __init__(self, cid, title, category_type, description=None):
         self.cid = cid
         self.title = title
-        self.type = type
+        self.type = category_type
         self.description = description
 
 
@@ -78,16 +78,16 @@ class Product(object):
         self.pid = pid
         if self.img_list:
             if 'SERVER_SOFTWARE' not in os.environ:
-                self.img_list = ['/' + UPLOAD_FOLDER + str for str in self.img_list]
-        if self.img_list == None or len(self.img_list) == 0:
+                self.img_list = ['/' + UPLOAD_FOLDER + str1 for str1 in self.img_list]
+        if self.img_list is None or len(self.img_list) == 0:
             self.img_list = ['/static/img/no_image2.png']
 
     def get_description(self):
         # print self.description
-        str = self.description.decode('string_escape')
-        str = str.replace('\\', '')
+        str1 = self.description.decode('string_escape')
+        str1 = str1.replace('\\', '')
         # print str
-        return str
+        return str1
 
 
 class SendEmailThread(Thread):
@@ -125,15 +125,15 @@ def conn():
     if 'SERVER_SOFTWARE' in os.environ:
         # for SAE
 
-        con1 = mdb.connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB, port=int(MYSQL_PORT))
+        con = mdb.connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASS, MYSQL_DB, port=int(MYSQL_PORT))
     else:
         # for local
 
         print "connecting local mysql"
 
-        con1 = mdb.connect(host=LOCAL_HOST, user=LOCAL_USERNAME, passwd=LOCAL_PASSWD, db=LOCAL_DB_NAME,
-                           port=LOCAL_PORT, charset='utf8')
-    return con1
+        con = mdb.connect(host=LOCAL_HOST, user=LOCAL_USERNAME, passwd=LOCAL_PASSWD, db=LOCAL_DB_NAME,
+                          port=LOCAL_PORT, charset='utf8')
+    return con
 
 
 def execute_select_one(con, sql):
@@ -168,20 +168,15 @@ def execute_non_query(con, sql):
     con.commit()
 
 
-def developers_authentication(con, username, password):
+def user_authentication(con, username, password, user_type):
     es_username = re.escape(username)
-    sql = "select uid,username from {0} where username='{1}' and password='{2}' ".format(DEVELOPERS_TABLE,
-                                                                                         es_username,
-                                                                                         password)
-    result = execute_select_one(con, sql)
-    return result
-
-
-def buyers_authentication(con, username, password):
-    es_username = re.escape(username)
-    sql = "select uid,username from {0} where username='{1}' and password='{2}' ".format(BUYERS_TABLE,
-                                                                                         es_username,
-                                                                                         password)
+    if user_type == 'developer':
+        table = DEVELOPERS_TABLE
+    elif user_type == 'buyer':
+        table = BUYERS_TABLE
+    else:
+        return
+    sql = "select uid,username from {0} where username='{1}' and password='{2}' ".format(table, es_username, password)
     result = execute_select_one(con, sql)
     return result
 
@@ -201,7 +196,7 @@ def add_developer(con, dev):
 def is_buyer_email_exist(con, email):
     sql = "select * from {0} where email='{1}'".format(BUYERS_TABLE, email)
     result = execute_select_one(con, sql)
-    if result == None:
+    if result is None:
         return False
     else:
         return True
@@ -210,29 +205,29 @@ def is_buyer_email_exist(con, email):
 def is_dev_email_exist(con, email):
     sql = "select * from developers where email='{0}'".format(email)
     result = execute_select_one(con, sql)
-    if result == None:
+    if result is None:
         return False
     else:
         return True
 
 
-def is_email_exist(con, email, type):
-    if type == 'dev':
+def is_email_exist(con, email, user_type):
+    if user_type == 'dev':
         return is_dev_email_exist(con, email)
-    elif type == 'buyer':
+    elif user_type == 'buyer':
         return is_buyer_email_exist(con, email)
     return False
 
 
-def get_category_id(con, title, type):
-    sql = "select cid from {0} where type='{1}' and title='{2}'".format(CATEGORY_TABLE, type, title)
+def get_category_id(con, title, category_type):
+    sql = "select cid from {0} where type='{1}' and title='{2}'".format(CATEGORY_TABLE, category_type, title)
     result = execute_select_one(con, sql)
     return result[0]
 
 
-def get_category_title(con, pid, type):
+def get_category_title(con, pid, category_type):
     sql = "select title from {0} as pc, {1} as c where pid ={2} and c.cid=pc.cid and c.type='{3}' ".format(
-        PRODUCT_CATEGORY_TABLE, CATEGORY_TABLE, pid, type)
+        PRODUCT_CATEGORY_TABLE, CATEGORY_TABLE, pid, category_type)
     result = execute_select_one(con, sql)
     if result:
         return result[0]
@@ -282,12 +277,12 @@ def relation_to_object_mapping_product(con, row):
     return product
 
 
-def relation_to_object_mapping_developer(con, row):
+def relation_to_object_mapping_developer(row):
     dev = Developer(uid=row[0], username=row[1], email=row[3])
     return dev
 
 
-def relation_to_object_mapping_buyer(con, row):
+def relation_to_object_mapping_buyer(row):
     buyer = Buyer(uid=row[0], username=row[1], email=row[3])
     return buyer
 
@@ -302,11 +297,11 @@ def relation_to_object_mapping_buyer(con, row):
 #     return c_ui
 
 
-def get_category_value_list(con, type):
-    sql = "select * from {0} where type='{1}'".format(CATEGORY_TABLE, type)
+def get_category_value_list(con, category_type):
+    sql = "select * from {0} where type='{1}'".format(CATEGORY_TABLE, category_type)
     result = execute_select_all(con, sql)
     # convert to list
-    list1 = [Category(cid=row[0], type=row[1], title=row[2]) for row in result]
+    list1 = [Category(cid=row[0], category_type=row[1], title=row[2]) for row in result]
     return list1
 
 
@@ -326,14 +321,14 @@ def get_product_detail(con, title):
 def get_buyer(con, uid):
     sql = "SELECT * from {0} where uid='{1}'".format(BUYERS_TABLE, uid)
     result = execute_select_one(con, sql)
-    buyer = relation_to_object_mapping_buyer(con, result)
+    buyer = relation_to_object_mapping_buyer(result)
     return buyer
 
 
 def get_developer(con, uid):
     sql = "SELECT * from {0} where uid='{1}'".format(DEVELOPERS_TABLE, uid)
     result = execute_select_one(con, sql)
-    buyer = relation_to_object_mapping_developer(con, result)
+    buyer = relation_to_object_mapping_developer(result)
     return buyer
 
 
@@ -367,7 +362,7 @@ def has_bought(con, title, buyer_id):
     sql = "select * from {0} where pid={1} and buyer_uid={2}".format(ORDERS_TABLE, p.pid, buyer_id)
     cursor.execute(sql)
     result = cursor.fetchone()
-    if result != None:
+    if result is not None:
         return True
     else:
         return False
@@ -415,8 +410,8 @@ def save_product(con, p):
     return pid
 
 
-def add_product_category(con, pid, type, title):
-    cid = get_category_id(con, title, type)
+def add_product_category(con, pid, category_type, title):
+    cid = get_category_id(con, title, category_type)
     sql = "insert into {0} values ({1},{2})".format(PRODUCT_CATEGORY_TABLE, pid, cid)
     execute_non_query(con, sql)
 
@@ -482,9 +477,7 @@ def get_product_img(con, pid):
 
 def delete_product(con, p_title):
     pid = get_product_id(con, p_title)
-    print "before delete category"
     delete_product_category(con, pid)
-    print "before detele img"
     delete_img(con, pid, p_title)
     sql = "delete from {0} where title='{1}'".format(PRODUCTS_TABLE, p_title)
     execute_non_query(con, sql)
@@ -495,18 +488,18 @@ def send_mail(to_addrs, buyer, product_title):
     thread1.start()
 
 
-def add_category_item(con, title, type):
-    sql = "insert into {0} (type,title) values('{1}','{2}') ".format(CATEGORY_TABLE, type, title)
+def add_category_item(con, title, category_type):
+    sql = "insert into {0} (type,title) values('{1}','{2}') ".format(CATEGORY_TABLE, category_type, title)
     execute_non_query(con, sql)
 
 
-def delete_category_item(con, title, type):
-    sql = "delete from {0} where title='{1}' and type='{2}' ".format(CATEGORY_TABLE, title, type)
+def delete_category_item(con, title, category_type):
+    sql = "delete from {0} where title='{1}' and type='{2}' ".format(CATEGORY_TABLE, title, category_type)
     execute_non_query(con, sql)
 
 
 if __name__ == "__main__":
-    con = conn()
+    con1 = conn()
     # cursor = con.cursor()
     # sql = "select * from {0}".format(ORDERS_TABLE)
     # cursor.execute(sql)
@@ -519,6 +512,6 @@ if __name__ == "__main__":
     # r = get_category_ui_style_list(con)
     # r = get_category_ui_style_title(con, 2)
     # r = get_product_detail(con, 'airbnb')
-    r = get_buyer_orders(con, 1)
+    r = get_buyer_orders(con1, 1)
     print r
     # u = Developer("ha", "123", "sadsaa@dasda.com")

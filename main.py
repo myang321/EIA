@@ -34,15 +34,15 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        type = request.form['type']
-        if type == 'developer':
-            result = db.developers_authentication(g.db, username, password)
-        elif type == 'buyer':
-            result = db.buyers_authentication(g.db, username, password)
-        if result != None:
+        user_type = request.form['type']
+        print "before user auth"
+        result = db.user_authentication(g.db, username, password, user_type)
+        print "after user auth"
+        if result is not None:
             session['username'] = username
-            session['type'] = type
+            session['type'] = user_type
             session['uid'] = result[0]
+            print "before index redirect"
             return redirect(url_for('index', status=0))
         else:
             return redirect(url_for('index', status=2))
@@ -56,20 +56,19 @@ def signup():
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
-        type = request.form['type']
-        if db.is_email_exist(g.db, email, type):
+        user_type = request.form['type']
+        if db.is_email_exist(g.db, email, user_type):
             msg = "email already used"
             return redirect(url_for('index', status=1, msg=msg))
-        if type == 'developer':
+        if user_type == 'developer':
             dev = db.Developer(username, password, email)
             db.add_developer(g.db, dev)
-            result = db.developers_authentication(g.db, username, password)
-        elif type == 'buyer':
+        elif user_type == 'buyer':
             buyer = db.Buyer(username, password, email)
             db.add_buyer(g.db, buyer)
-            result = db.buyers_authentication(g.db, username, password)
+        result = db.user_authentication(g.db, username, password, user_type)
         session['username'] = username
-        session['type'] = type
+        session['type'] = user_type
         session['uid'] = result[0]
         return redirect(url_for('index', status=0))
     else:
@@ -85,13 +84,13 @@ def search():
     return render_template('search.html', list1=list1, editable=editable)
 
 
-@app.route('/logout/')
+@app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('index'))
 
 
-@app.route('/developer/')
+@app.route('/developer')
 def developer():
     list1 = db.get_developers_products(g.db, session['uid'])
     list2 = db.get_developer_orders(g.db, session['uid'])
@@ -102,32 +101,32 @@ def developer():
                            is_new=is_new)
 
 
-@app.route('/buyer/')
+@app.route('/buyer')
 def buyer():
     list1 = db.get_buyer_orders(g.db, session['uid'])
     editable = False
     return render_template('buyer.html', list1=list1, editable=editable)
 
 
-@app.route('/product_detail/')
+@app.route('/product_detail')
 def product_detail():
     title = request.args.get('title')
     product = db.get_product_detail(g.db, title)
-    if session.get('uid') == None:
+    if session.get('uid') is None:
         bought = False
     else:
         bought = db.has_bought(g.db, title, session['uid'])
     return render_template('product_detail.html', p=product, bought=bought)
 
 
-@app.route('/buy/', methods=['POST'])
+@app.route('/buy', methods=['POST'])
 def buy():
     product_title = request.form['p_title']
     db.create_order(g.db, product_title, session['uid'])
     return redirect(url_for('product_detail', title=product_title))
 
 
-@app.route('/upload/', methods=['POST'])
+@app.route('/upload', methods=['POST'])
 def upload_product():
     print "enter upload product"
     product_title = request.form['title']
@@ -152,7 +151,7 @@ def upload_product():
     return redirect(url_for('developer'))
 
 
-@app.route('/edit_product/', methods=['GET', 'POST'])
+@app.route('/edit_product', methods=['GET', 'POST'])
 def edit_product():
     if request.method == 'POST':
         pass
@@ -166,7 +165,6 @@ def edit_product():
 @app.route('/delete_product/', methods=['POST'])
 def delete_product():
     product_title = request.form['p_title']
-    print "title", product_title
     db.delete_product(g.db, product_title)
     return redirect(url_for('developer'))
 
@@ -182,9 +180,9 @@ def admin_category():
 def admin_add_category_item():
     if session.get('admin') != 1:
         redirect(url_for('admin_auth'))
-    type = request.form['type']
+    category_type = request.form['type']
     title = request.form['title']
-    db.add_category_item(g.db, title, type)
+    db.add_category_item(g.db, title, category_type)
     return redirect(url_for('admin_category'))
 
 
@@ -192,9 +190,9 @@ def admin_add_category_item():
 def admin_delete_category_item():
     if session.get('admin') != 1:
         redirect(url_for('admin_auth'))
-    type = request.form['type']
+    category_type = request.form['type']
     title = request.form['title']
-    db.delete_category_item(g.db, title, type)
+    db.delete_category_item(g.db, title, category_type)
     return redirect(url_for('admin_category'))
 
 

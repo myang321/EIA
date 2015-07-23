@@ -16,7 +16,7 @@
         <div class="tab-content">
             <div class="tab-pane active" id="tab1">
                 {% if list1|length==0 %}
-                    <div id="no-result">Sorry. Your haven't upload any product.</div>
+                    <div class="no-result">Sorry. Your haven't upload any product.</div>
                 {% else %}
                     {% include 'search_grid.html' %}
                 {% endif %}
@@ -25,7 +25,7 @@
             {% set editable=False %}
             <div class="tab-pane" id="tab2">
                 {% if list1|length==0 %}
-                    <div id="no-result">Sorry. You haven't sold any product yet.</div>
+                    <div class="no-result">Sorry. You haven't sold any product yet.</div>
                 {% else %}
                     {% include 'search_grid.html' %}
                 {% endif %}

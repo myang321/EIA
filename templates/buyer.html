@@ -8,7 +8,7 @@
 
 {% block body %}
     {% if list1|length==0 %}
-        <div>You haven't bought any product yet.</div>
+        <div class="no-result">You haven't bought any product yet.</div>
     {% else %}
         {% include 'search_grid.html' %}
     {% endif %}

@@ -11,7 +11,7 @@
 {% block body %}
     {% include 'search_form.html' %}
     {% if list1|length==0 %}
-        <div id="no-result">Sorry. Your search has no result.</div>
+        <div class="no-result">Sorry. Your search has no result.</div>
     {% else %}
         {% include 'search_grid.html' %}
     {% endif %}
